@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp">
+    <EditText
+        android:id="@+id/signupuserid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:hint="帐号"
+        android:layout_below="@id/applogo"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp" />
+
+    <EditText
+        android:id="@+id/signupuserpassword1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:hint="密码"
+        android:layout_below="@id/signupuserid"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"/>
+    <EditText
+        android:id="@+id/signupuserpassword2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:hint="确认密码"
+        android:layout_below="@id/signupuserpassword1"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"/>
+    <Button
+        android:id="@+id/signuplogin_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="注册"
+        android:textColor="@color/white"
+        android:background="@color/cornflowerblue"
+        android:layout_below="@id/signupuserpassword2"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"/>
+</RelativeLayout>

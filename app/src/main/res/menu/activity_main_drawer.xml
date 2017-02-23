@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/messagemenu"
+        android:title="我的消息" />
+    <item
+        android:id="@+id/settingmenu"
+        android:title="用户设置" />
+</menu>
