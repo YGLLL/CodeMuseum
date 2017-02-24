@@ -20,6 +20,7 @@ import com.example.ygl.codemuseum.util.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -27,6 +28,10 @@ import java.util.regex.Pattern;
  */
 
 public class SignUpActivity extends AppCompatActivity{
+    private String atdhome="http://site.i.atd3.cn";
+    private String key="token=c7b04d1534f1ed7bb9241cf5fe6ea11e&t=1x&client=1";
+    private String atdcode=atdhome+"/verify.png?";
+
     private EditText signup_userid;
     private EditText signup_userpossword1;
     private EditText signup_userpossword2;
@@ -81,14 +86,14 @@ public class SignUpActivity extends AppCompatActivity{
         signup_refreshcheckcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getcheckcode();//查询验证码
+                getcheckcodepicture();
             }
         });
     }
 
     //查询是否需要验证码
     private void getcheckcode(){
-        String url="http://site.i.atd3.cn/api/user/needcode?token=c7b04d1534f1ed7bb9241cf5fe6ea11e&t=1x&client=1";
+        String url="http://site.i.atd3.cn/api/user/needcode?"+key;
         String jsonString="{}";
         HttpUtil.sendHttpRequest(url, jsonString, new HttpCallbackListener() {
             @Override
@@ -97,9 +102,7 @@ public class SignUpActivity extends AppCompatActivity{
                 String str=Utility.getcheckcodeforJson(responsestr);
                 if(!str.equals("false")){
                     needcode=true;
-                    String codeurl="http://site.i.atd3.cn"+str;
-                    Log.e("getcheckcodeforJson",str);
-                    getcheckcodepicture(codeurl);
+                    getcheckcodepicture();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -116,7 +119,8 @@ public class SignUpActivity extends AppCompatActivity{
         });
     }
     //获取验证码图片
-    private void getcheckcodepicture(String url){
+    private void getcheckcodepicture(){
+        String url=atdcode+key+"&t="+String.valueOf(new Date().getTime());
         HttpUtil.sendHttpPicture(url, new HttpCallbackListener() {
             @Override
             public void onFinish(Object response) {
@@ -138,7 +142,7 @@ public class SignUpActivity extends AppCompatActivity{
 
     //提交注册数据
     private void commituserObject(){
-        String url="http://site.i.atd3.cn/api/user/signup?token=c7b04d1534f1ed7bb9241cf5fe6ea11e&client=1";
+        String url="http://site.i.atd3.cn/api/user/signup?"+key;
         String jsonString="";
         try{
             JSONObject jsonObject=new JSONObject();
@@ -147,13 +151,30 @@ public class SignUpActivity extends AppCompatActivity{
             jsonObject.put("passwd",userpossword1);
             jsonObject.put("code",checkcode);
             jsonString=String.valueOf(jsonObject);
-            Log.e("commituserObject","提交注册数据"+jsonString);
         }catch (JSONException e){
             e.printStackTrace();
         }
         HttpUtil.sendHttpRequest(url, jsonString, new HttpCallbackListener() {
             @Override
             public void onFinish(Object response) {
+                String returnstr=response.toString();
+                try{
+                    JSONObject jsonObject=new JSONObject(returnstr);
+                    String str=jsonObject.getString("error");
+                    if(!TextUtils.isEmpty(str)){
+                        getcheckcodepicture();
+                        if(str.equals("codeError")){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(SignUpActivity.this, "验证码错误", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
                 Log.e("commituserObject",response.toString());
             }
 
