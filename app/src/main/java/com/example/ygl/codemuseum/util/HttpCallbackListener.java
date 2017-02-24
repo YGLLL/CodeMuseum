@@ -5,6 +5,6 @@ package com.example.ygl.codemuseum.util;
  */
 
 public interface HttpCallbackListener {
-    void onFinish(String response);
+    void onFinish(Object response);
     void onError(Exception e);
 }

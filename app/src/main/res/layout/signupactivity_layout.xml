@@ -2,47 +2,96 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="16dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp">
+
+    <ImageView
+        android:id="@+id/signup_applogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@mipmap/ic_launcher" />
     <EditText
-        android:id="@+id/signupuserid"
+        android:id="@+id/signup_userid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:hint="帐号"
-        android:layout_below="@id/applogo"
+        android:hint="用户名"
+        android:layout_below="@id/signup_applogo"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp" />
 
     <EditText
-        android:id="@+id/signupuserpassword1"
+        android:id="@+id/signup_userpassword1"
+        android:password="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:hint="密码"
-        android:layout_below="@id/signupuserid"
+        android:layout_below="@id/signup_userid"
         android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"/>
+        android:layout_marginRight="32dp" />
     <EditText
-        android:id="@+id/signupuserpassword2"
+        android:id="@+id/signup_userpassword2"
+        android:password="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:hint="确认密码"
-        android:layout_below="@id/signupuserpassword1"
+        android:layout_below="@id/signup_userpassword1"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"/>
+    <EditText
+        android:id="@+id/signup_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:hint="邮箱"
+        android:layout_below="@id/signup_userpassword2"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"/>
+    <RelativeLayout
+        android:id="@+id/signup_checkcodelayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_below="@id/signup_email">
+
+        <Button
+            android:id="@+id/signup_refreshcheckcode"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/re"
+            android:layout_alignParentRight="true"/>
+
+        <ImageView
+            android:id="@+id/signup_checkcodepicture"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:layout_toLeftOf="@id/signup_refreshcheckcode"/>
+        <EditText
+            android:id="@+id/signup_checkcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="验证码"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/signup_checkcodepicture"/>
+    </RelativeLayout>
+
     <Button
-        android:id="@+id/signuplogin_button"
+        android:id="@+id/signup_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="注册"
         android:textColor="@color/white"
         android:background="@color/cornflowerblue"
-        android:layout_below="@id/signupuserpassword2"
+        android:layout_below="@id/signup_checkcodelayout"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"/>
 </RelativeLayout>

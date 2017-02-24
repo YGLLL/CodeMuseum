@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:hint="帐号"
+        android:hint="用户名"
         android:layout_below="@id/applogo"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp" />
