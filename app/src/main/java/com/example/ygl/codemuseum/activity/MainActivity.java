@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.ygl.codemuseum.R;
+import com.example.ygl.codemuseum.activity.useractivity.MessageActivity;
+import com.example.ygl.codemuseum.activity.useractivity.SettingActivity;
+import com.example.ygl.codemuseum.activity.useractivity.SigninActivity;
 
 /**
  * Created by YGL on 2017/2/22.

@@ -66,7 +66,7 @@ public class HttpUtil {
         }).start();
     }
 
-    public static void sendHttpPicture(final String address, final HttpCallbackListener listener){
+    public static void sendHttpRequestPicture(final String address, final HttpPictureCallbackListener listener){
         new Thread(new Runnable() {
             @Override
             public void run() {

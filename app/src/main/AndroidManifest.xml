@@ -20,9 +20,9 @@
             <category android:name="android.intent.category.LAUNCHER"></category>
         </intent-filter>
     </activity>
-    <activity android:name=".activity.SigninActivity"></activity>
-    <activity android:name=".activity.SignUpActivity"></activity>
-    <activity android:name=".activity.SettingActivity"></activity>
-    <activity android:name=".activity.MessageActivity"></activity>
+    <activity android:name=".activity.useractivity.SigninActivity"></activity>
+    <activity android:name=".activity.useractivity.SignUpActivity"></activity>
+    <activity android:name=".activity.useractivity.SettingActivity"></activity>
+    <activity android:name=".activity.useractivity.MessageActivity"></activity>
     </application>
 </manifest>

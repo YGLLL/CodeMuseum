@@ -1,4 +1,4 @@
-package com.example.ygl.codemuseum.activity;
+package com.example.ygl.codemuseum.activity.useractivity;
 
 import android.content.Intent;
 import android.os.Bundle;

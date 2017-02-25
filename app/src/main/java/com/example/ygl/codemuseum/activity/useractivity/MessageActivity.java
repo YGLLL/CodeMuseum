@@ -1,4 +1,4 @@
-package com.example.ygl.codemuseum.activity;
+package com.example.ygl.codemuseum.activity.useractivity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
