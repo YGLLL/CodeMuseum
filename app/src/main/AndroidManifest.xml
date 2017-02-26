@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.ygl.codemuseum">
+    package="cn.atd3.ygl.codemuseum">
 
     <!--网络权限-->
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
 
 
     <application
@@ -16,13 +16,13 @@
         android:name=".activity.MainActivity"
         android:theme="@style/AppTheme.NoActionBar">
         <intent-filter>
-            <action android:name="android.intent.action.MAIN"></action>
-            <category android:name="android.intent.category.LAUNCHER"></category>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
     </activity>
-    <activity android:name=".activity.useractivity.SigninActivity"></activity>
-    <activity android:name=".activity.useractivity.SignUpActivity"></activity>
-    <activity android:name=".activity.useractivity.SettingActivity"></activity>
-    <activity android:name=".activity.useractivity.MessageActivity"></activity>
+        <activity android:name=".activity.useractivity.SigninActivity" />
+        <activity android:name=".activity.useractivity.SignUpActivity" />
+        <activity android:name=".activity.useractivity.SettingActivity" />
+        <activity android:name=".activity.useractivity.MessageActivity" />
     </application>
 </manifest>
