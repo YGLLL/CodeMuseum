@@ -25,5 +25,6 @@ public class SigninActivity extends AppCompatActivity{
                 startActivity(intent);
             }
         });
+        //现在是signin分支
     }
 }
