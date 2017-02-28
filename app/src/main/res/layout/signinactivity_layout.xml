@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:hint="密码"
+        android:password="true"
         android:layout_below="@id/userid"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"/>
@@ -44,6 +45,36 @@
         android:layout_below="@id/userpassword"
         android:layout_alignLeft="@id/userpassword"/>
 
+    <RelativeLayout
+        android:id="@+id/checkcodelayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_below="@id/forget_password">
+
+        <Button
+            android:id="@+id/refreshcheckcode"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/re"
+            android:layout_alignParentRight="true"/>
+
+        <ImageView
+            android:id="@+id/checkcodepicture"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:layout_toLeftOf="@id/refreshcheckcode"/>
+        <EditText
+            android:id="@+id/checkcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="验证码"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/checkcodepicture"/>
+    </RelativeLayout>
+
     <Button
         android:id="@+id/login_button"
         android:layout_width="match_parent"
@@ -52,7 +83,7 @@
         android:text="登陆"
         android:textColor="@color/white"
         android:background="@color/cornflowerblue"
-        android:layout_below="@id/forget_password"
+        android:layout_below="@id/checkcodelayout"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"/>
 
