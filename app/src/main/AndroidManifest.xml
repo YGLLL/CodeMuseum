@@ -27,5 +27,6 @@
         <activity android:name=".activity.useractivity.SignUpActivity" />
         <activity android:name=".activity.useractivity.SettingActivity" />
         <activity android:name=".activity.useractivity.MessageActivity" />
+        <service android:name=".service.BeatService"></service>
     </application>
 </manifest>
