@@ -1,9 +1,8 @@
-package cn.atd3.support.api;
+package cn.atd3.support.api.v1;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,12 +11,17 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
+
+import cn.atd3.support.api.ServerConnectException;
+import cn.atd3.support.api.ClientNoFoundException;
 
 /**
- * Created by 冯世昌 on 2017/3/1 0001.
+ * Created by DXkite on 2017/3/1 0001.
+ * API管理器
+ *  修改日志：
+ *      + 添加异常类输出
+ *      + 添加版本命名空间区分
  */
-
 public class ApiManager {
     public  static int CLIENT_ID;
     public  static String CLIENT_TOKEN;
@@ -25,7 +29,7 @@ public class ApiManager {
     private static String API_HOST="http://api.i.atd3.cn";
     private static String API_VERSION="v1.0";
     private static int timeOut=5000;
-    private static String META_NAME="cn.atd3.support.api.ClientToken";
+    private static String META_NAME="cn.atd3.support.api.v1.ClientToken";
 
     static ApiManager instance=new ApiManager();
 
@@ -38,14 +42,14 @@ public class ApiManager {
         try {
             appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             String msg=appInfo.metaData.getString(META_NAME);
-            int pos=msg.indexOf(":");
-            CLIENT_ID=Integer.parseInt(msg.substring(0,pos));
-            CLIENT_TOKEN=msg.substring(pos+1);
-            Log.i(TAG," id:"+CLIENT_ID);
-            Log.i(TAG," token:"+CLIENT_TOKEN);
+            int pos= 0;
+            if (msg != null) {
+                pos = msg.indexOf(":");
+                CLIENT_ID=Integer.parseInt(msg.substring(0,pos));
+                CLIENT_TOKEN=msg.substring(pos+1);
+            }
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            return  false;
+            throw new ClientNoFoundException("client info no find in manifast",e.getCause());
         }
         return  true;
     }
@@ -56,16 +60,15 @@ public class ApiManager {
         return instance;
     }
 
-    public static  String action(String action){
+    public static  String action(String action)throws ServerConnectException {
         return action(action,null);
     }
 
-    public static  String action(String action,String data){
+    public static  String action(String action,String data)throws ServerConnectException {
         return action(action,data,"application/json");
     }
 
-    public static  String action(String action,String data,String type)
-    {
+    public static  String action(String action,String data,String type) throws ServerConnectException {
         String address=API_HOST+'/'+API_VERSION+'/'+action;
         String response="";
         try {
@@ -107,8 +110,7 @@ public class ApiManager {
             response=out;
             httpUrlConnection.disconnect();
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new ServerConnectException("read response failed",e);
         }
         return response;
     }

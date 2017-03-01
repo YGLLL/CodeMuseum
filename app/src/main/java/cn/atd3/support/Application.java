@@ -1,7 +1,7 @@
 package cn.atd3.support;
 
 
-import cn.atd3.support.api.ApiManager;
+import cn.atd3.support.api.v1.ApiManager;
 
 /**
  * Created by DXkite on 2017/2/14 0014.

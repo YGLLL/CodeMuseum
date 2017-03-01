@@ -24,8 +24,8 @@ import java.util.Map;
  * Created by DXkite on 2017/2/14 0014.
  */
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
-    public static final String TAG = "DxCrashHandler";
-    private static  String name = "DxCrashLog";
+    public static final String TAG = "CrashHandler";
+    private static  String name = "CrashHandler";
     private static final String PATH = "atd/crash";
     private static CrashHandler instance = new CrashHandler();
     private Thread.UncaughtExceptionHandler handler;
@@ -66,7 +66,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     protected boolean handlerException(Throwable ex) {
-        Log.d(TAG, "handler exception");
+        Log.e(TAG, "handler exception",ex);
         if (ex == null) return false;
         new Thread(){
             @Override
