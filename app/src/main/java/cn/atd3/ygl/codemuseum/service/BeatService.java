@@ -57,39 +57,4 @@ public class BeatService extends Service{
         ses.scheduleAtFixedRate(runnable,50,50, TimeUnit.SECONDS);
         return super.onStartCommand(intent,flags,startId);
     }
-  /*
-    //发送心跳包
-    private void onceBeat(){
-
-
-        String jsonstring="";
-        try{
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("token",beattoken);
-            jsonstring=jsonObject.toString();
-        }catch (JSONException e){e.printStackTrace();}
-
-        HttpUtil.sendHttpRequest(atdbeat,jsonstring, new HttpCallbackListener() {
-            @Override
-            public void onFinish(String response) {
-                beattoken=gettoken(response);
-            }
-
-            @Override
-            public void onError(Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-    }
-
-    private String gettoken(String response){
-        String string="";
-        try{
-            JSONObject jsonObject=new JSONObject(response);
-            JSONObject returnJson=jsonObject.getJSONObject("return");
-            string=returnJson.getString("token");
-        }catch (JSONException e){e.printStackTrace();}
-        return string;
-    }*/
 }
