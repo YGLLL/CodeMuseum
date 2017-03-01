@@ -21,8 +21,6 @@ import java.util.logging.LogRecord;
 import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
 import cn.atd3.ygl.codemuseum.util.HttpUtil;
 
-import static cn.atd3.ygl.codemuseum.util.Utility.beattoken;
-
 /**
  * Created by YGL on 2017/2/27.
  */
@@ -32,6 +30,7 @@ public class BeatService extends Service{
     private final String key="token=c7b04d1534f1ed7bb9241cf5fe6ea11e&client=1";
     private final String atdbeat=atdhome+"/v1.0/user/beat?"+key;
 
+    public static String beattoken="";
     @Override
     public IBinder onBind(Intent intent){
         return null;
