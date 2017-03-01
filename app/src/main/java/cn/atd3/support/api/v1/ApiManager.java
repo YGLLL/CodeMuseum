@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,12 +62,17 @@ public class ApiManager {
         return instance;
     }
 
+
     public static  String action(String action)throws ServerConnectException {
-        return action(action,null);
+        return action(action,null,"application/json");
     }
 
     public static  String action(String action,String data)throws ServerConnectException {
         return action(action,data,"application/json");
+    }
+
+    public static  String action(String action,JSONObject data)throws ServerConnectException {
+        return action(action,data.toString(),"application/json");
     }
 
     public static  String action(String action,String data,String type) throws ServerConnectException {
