@@ -20,8 +20,11 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Created by DXkite on 2017/2/14 0014.
+ */
+public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
-class CrashHandler implements Thread.UncaughtExceptionHandler {
     public static final String TAG = "DxCrashHandler";
     private static  String name = "DxCrashLog";
     private static final String PATH = "atd/crash";
