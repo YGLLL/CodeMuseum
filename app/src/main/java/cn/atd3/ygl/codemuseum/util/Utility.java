@@ -14,7 +14,9 @@ public class Utility {
 
     public static String beattoken="";
 
+    /*******
     public static String urlAddT(String url){
         return url+"&t="+String.valueOf(new Date().getTime());
     }
+     **************/
 }

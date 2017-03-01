@@ -1,10 +1,12 @@
 package cn.atd3.ygl.codemuseum.activity.useractivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,16 +14,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import cn.atd3.ygl.codemuseum.activity.MainActivity;
+import cn.atd3.ygl.codemuseum.service.BeatService;
 import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
 import cn.atd3.ygl.codemuseum.util.HttpPictureCallbackListener;
 import cn.atd3.ygl.codemuseum.util.HttpUtil;
-import cn.atd3.ygl.codemuseum.util.Utility;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.regex.Pattern;
+
+import static cn.atd3.ygl.codemuseum.service.BeatService.beattoken;
 
 /**
  * Created by YGL on 2017/2/20.
@@ -100,17 +104,20 @@ public class SignUpActivity extends AppCompatActivity{
         HttpUtil.sendHttpRequest(atdneedcode, jsonString, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                if((response.indexOf("need")!=-1)&&(response.indexOf("true")!=-1)){
-                    needcode=true;
-                    getcheckcodepicture();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //显示验证码相关控件
-                            relativeLayout.setVisibility(View.VISIBLE);
-                        }
-                    });
-                }
+                try{
+                    JSONObject jsonObject=new JSONObject(response);
+                    if(jsonObject.getString("return").equals("true")){
+                        needcode=true;
+                        getcheckcodepicture();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //显示验证码相关控件
+                                relativeLayout.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }
+                }catch (JSONException e){e.printStackTrace();}
             }
 
             @Override
@@ -222,21 +229,21 @@ public class SignUpActivity extends AppCompatActivity{
         });
     }
     private void signupfeedback(String response){
-        //!不标准的json解析方式
-        if((response.indexOf("return")!=-1)&&(response.indexOf("uid")!=-1)){
-            //注册成功
-            toastPrintf("注册成功");
-            finish();
-        }else {
-            if(response.indexOf("codeError")!=-1){
-                //验证码错误
-                getcheckcodepicture();//刷新验证码
+        try{
+            JSONObject jsonObject=new JSONObject(response);
+            if(jsonObject.has("error")){
+                getcheckcode();//刷新验证码
                 toastPrintf("验证码错误");
             }else {
-                //其他未知错误
-                getcheckcodepicture();//刷新验证码
-                toastPrintf("注册失败,其他错误");
+                jsonObject=jsonObject.getJSONObject("return");
+                if(jsonObject.has("uid")){
+                    //注册成功
+                    toastPrintf("注册成功");
+                    finish();
+                }
             }
+        }catch (JSONException e){
+            e.printStackTrace();
         }
     }
 

@@ -17,7 +17,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
-
 import cn.atd3.support.api.ServerConnectException;
 import cn.atd3.support.api.v1.User;
 import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
@@ -50,11 +49,13 @@ public class BeatService extends Service{
                     Log.i(TAG,"after_beat:"+beattoken);
                 } catch (ServerConnectException e) {
                     e.printStackTrace();
+
                 }
             }
         };
         ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
         ses.scheduleAtFixedRate(runnable,50,50, TimeUnit.SECONDS);
         return super.onStartCommand(intent,flags,startId);
+
     }
 }
