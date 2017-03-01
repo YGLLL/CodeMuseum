@@ -31,14 +31,14 @@ public class SignUpActivity extends AppCompatActivity{
     private final String atdhome="http://api.i.atd3.cn";
     private final String key="token=c7b04d1534f1ed7bb9241cf5fe6ea11e&client=1";
     private final String atdcode=atdhome+"/v1.0/verify_image?"+key;
-    private final String atdneedcode=atdhome+"/v1.0/user/needcode?"+key;
+    private final String atdneedcode=atdhome+"/v1.0/user/signupcode?"+key;
     private final String atdsignup=atdhome+"/v1.0/user/signup?"+key;
     private final String atdcheckname=atdhome+"/v1.0/user/checkname?"+key;
     private final String atdcheckemail=atdhome+"/v1.0/user/checkemail?"+key;
 
     private EditText signup_userid;
-    private EditText signup_userpossword1;
-    private EditText signup_userpossword2;
+    private EditText signup_userpassword1;
+    private EditText signup_userpassword2;
     private EditText signup_email;
     private EditText signup_checkcode;
     private ImageView signup_checkcodepicture;
@@ -60,8 +60,8 @@ public class SignUpActivity extends AppCompatActivity{
         setContentView(cn.atd3.ygl.codemuseum.R.layout.signupactivity_layout);
 
         signup_userid=(EditText)findViewById(cn.atd3.ygl.codemuseum.R.id.signup_userid);
-        signup_userpossword1=(EditText)findViewById(cn.atd3.ygl.codemuseum.R.id.signup_userpassword1);
-        signup_userpossword2=(EditText)findViewById(cn.atd3.ygl.codemuseum.R.id.signup_userpassword2);
+        signup_userpassword1=(EditText)findViewById(cn.atd3.ygl.codemuseum.R.id.signup_userpassword1);
+        signup_userpassword2=(EditText)findViewById(cn.atd3.ygl.codemuseum.R.id.signup_userpassword2);
         signup_email=(EditText)findViewById(cn.atd3.ygl.codemuseum.R.id.signup_email);
         signup_checkcode=(EditText)findViewById(cn.atd3.ygl.codemuseum.R.id.signup_checkcode);
         signup_checkcodepicture=(ImageView)findViewById(cn.atd3.ygl.codemuseum.R.id.signup_checkcodepicture);
@@ -78,8 +78,8 @@ public class SignUpActivity extends AppCompatActivity{
             public void onClick(View v) {
                 showProgressDialog();
                 userid=signup_userid.getText().toString();
-                userpossword1=signup_userpossword1.getText().toString();
-                userpossword2=signup_userpossword2.getText().toString();
+                userpossword1=signup_userpassword1.getText().toString();
+                userpossword2=signup_userpassword2.getText().toString();
                 email=signup_email.getText().toString();
                 checkcode=signup_checkcode.getText().toString();
                 examineuserid();
@@ -96,13 +96,11 @@ public class SignUpActivity extends AppCompatActivity{
 
     //查询是否需要验证码
     private void getcheckcode(){
-        String url=atdneedcode+gett();
         String jsonString="{}";
-        HttpUtil.sendHttpRequest(url, jsonString, new HttpCallbackListener() {
+        HttpUtil.sendHttpRequest(atdneedcode, jsonString, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                String str= Utility.getcheckcodeforJson(response);
-                if(!str.equals("false")){
+                if((response.indexOf("need")!=-1)&&(response.indexOf("true")!=-1)){
                     needcode=true;
                     getcheckcodepicture();
                     runOnUiThread(new Runnable() {
@@ -123,8 +121,7 @@ public class SignUpActivity extends AppCompatActivity{
     }
     //获取验证码图片
     private void getcheckcodepicture(){
-        String url=atdcode+gett();
-        HttpUtil.sendHttpRequestPicture(url, new HttpPictureCallbackListener() {
+        HttpUtil.sendHttpRequestPicture(atdcode, new HttpPictureCallbackListener() {
             @Override
             public void onFinish(final Bitmap bitmap) {
                 runOnUiThread(new Runnable() {
@@ -200,7 +197,6 @@ public class SignUpActivity extends AppCompatActivity{
 
     //提交注册数据
     private void commituserObject(){
-        String url=atdsignup+gett();
         String jsonString="";
         try{
             JSONObject jsonObject=new JSONObject();
@@ -212,7 +208,7 @@ public class SignUpActivity extends AppCompatActivity{
         }catch (JSONException e){
             e.printStackTrace();
         }
-        HttpUtil.sendHttpRequest(url, jsonString, new HttpCallbackListener() {
+        HttpUtil.sendHttpRequest(atdsignup, jsonString, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
                 closeProgressDialog();
@@ -226,6 +222,7 @@ public class SignUpActivity extends AppCompatActivity{
         });
     }
     private void signupfeedback(String response){
+        //!不标准的json解析方式
         if((response.indexOf("return")!=-1)&&(response.indexOf("uid")!=-1)){
             //注册成功
             toastPrintf("注册成功");
@@ -252,9 +249,9 @@ public class SignUpActivity extends AppCompatActivity{
     private void checknameoremail(final String key,final String value){
         String url;
         if(key.equals("name")){
-            url=atdcheckname+gett();
+            url=atdcheckname;
         }else {
-            url=atdcheckemail+gett();
+            url=atdcheckemail;
         }
         String jsonString="";
         try{
@@ -328,9 +325,5 @@ public class SignUpActivity extends AppCompatActivity{
                 Toast.makeText(SignUpActivity.this,string, Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private String gett(){
-        return "&t="+String.valueOf(new Date().getTime());
     }
 }

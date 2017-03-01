@@ -4,14 +4,18 @@
 
     <!--网络权限-->
     <uses-permission android:name="android.permission.INTERNET" />
-
-
+    <!-- 文件读写 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!-- 应用启动监听 -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name="cn.atd3.support.Application"
+        >
     <activity
         android:name=".activity.MainActivity"
         android:theme="@style/AppTheme.NoActionBar">
@@ -24,5 +28,6 @@
         <activity android:name=".activity.useractivity.SignUpActivity" />
         <activity android:name=".activity.useractivity.SettingActivity" />
         <activity android:name=".activity.useractivity.MessageActivity" />
+        <service android:name=".service.BeatService"></service>
     </application>
 </manifest>
