@@ -18,6 +18,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
+import cn.atd3.support.api.ServerConnectException;
+import cn.atd3.support.api.v1.User;
 import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
 import cn.atd3.ygl.codemuseum.util.HttpUtil;
 
@@ -31,7 +33,7 @@ public class BeatService extends Service{
     private final String atdhome="http://api.i.atd3.cn";
     private final String key="token=c7b04d1534f1ed7bb9241cf5fe6ea11e&client=1";
     private final String atdbeat=atdhome+"/v1.0/user/beat?"+key;
-
+    final  String TAG="Beat_Server";
     @Override
     public IBinder onBind(Intent intent){
         return null;
@@ -42,17 +44,24 @@ public class BeatService extends Service{
         Runnable runnable=new Runnable() {
             @Override
             public void run() {
-                onceBeat();
+                Log.i(TAG,"before_beat:"+beattoken);
+                try {
+                    beattoken=User.beatHeart(beattoken);
+                    Log.i(TAG,"after_beat:"+beattoken);
+                } catch (ServerConnectException e) {
+                    e.printStackTrace();
+                }
             }
         };
         ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
         ses.scheduleAtFixedRate(runnable,50,50, TimeUnit.SECONDS);
-
         return super.onStartCommand(intent,flags,startId);
     }
-
+  /*
     //发送心跳包
     private void onceBeat(){
+
+
         String jsonstring="";
         try{
             JSONObject jsonObject=new JSONObject();
@@ -71,6 +80,7 @@ public class BeatService extends Service{
                 e.printStackTrace();
             }
         });
+
     }
 
     private String gettoken(String response){
@@ -81,5 +91,5 @@ public class BeatService extends Service{
             string=returnJson.getString("token");
         }catch (JSONException e){e.printStackTrace();}
         return string;
-    }
+    }*/
 }
