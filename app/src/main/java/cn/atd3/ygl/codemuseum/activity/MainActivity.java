@@ -8,10 +8,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import cn.atd3.support.api.ApiManager;
+import cn.atd3.support.api.User;
 import cn.atd3.ygl.codemuseum.activity.useractivity.MessageActivity;
 import cn.atd3.ygl.codemuseum.activity.useractivity.SettingActivity;
 import cn.atd3.ygl.codemuseum.activity.useractivity.SigninActivity;
@@ -48,6 +51,15 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+        // TODO: 删除这个
+        /**
+        // 测试API
+        new Thread(){
+            @Override
+            public void run() {
+                Log.i(ApiManager.TAG,"signin need code:"+User.signinCode());
+            }
+        }.start();*/
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
