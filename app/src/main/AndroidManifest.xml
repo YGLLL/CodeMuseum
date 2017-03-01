@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:value="1:c7b04d1534f1ed7bb9241cf5fe6ea11e"
-            android:name="cn.atd3.api.ClientToken"
+            android:name="cn.atd3.support.api.ClientToken"
             />
     <activity
         android:name=".activity.MainActivity"

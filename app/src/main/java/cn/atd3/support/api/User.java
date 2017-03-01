@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 public class User {
     /**
-     * 检测登陆是否需要验证码git
+     * 检测登陆是否需要验证码
      */
     public  static boolean signinCode(){
         String get=ApiManager.action("user/signincode");

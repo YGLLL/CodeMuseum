@@ -25,7 +25,7 @@ public class ApiManager {
     private static String API_HOST="http://api.i.atd3.cn";
     private static String API_VERSION="v1.0";
     private static int timeOut=5000;
-
+    private static String META_NAME="cn.atd3.support.api.ClientToken";
 
     static ApiManager instance=new ApiManager();
 
@@ -37,7 +37,7 @@ public class ApiManager {
         ApplicationInfo appInfo = null;
         try {
             appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-            String msg=appInfo.metaData.getString("cn.atd3.api.ClientToken");
+            String msg=appInfo.metaData.getString(META_NAME);
             int pos=msg.indexOf(":");
             CLIENT_ID=Integer.parseInt(msg.substring(0,pos));
             CLIENT_TOKEN=msg.substring(pos+1);
@@ -67,10 +67,11 @@ public class ApiManager {
     public static  String action(String action,String data,String type)
     {
         String address=API_HOST+'/'+API_VERSION+'/'+action;
-        String get_json="";
+        String response="";
         try {
-            URLConnection rulConnection=new URL(address).openConnection();
-            HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
+            // 创建连接
+            HttpURLConnection httpUrlConnection =(HttpURLConnection)new URL(address).openConnection();
+            // 设置服务器属性
             httpUrlConnection.setDoOutput(true);
             httpUrlConnection.setDoInput(true);
             httpUrlConnection.setUseCaches(false);
@@ -80,10 +81,12 @@ public class ApiManager {
             // 压入客户端验证信息
             httpUrlConnection.setRequestProperty("API-Client",""+CLIENT_ID);
             httpUrlConnection.setRequestProperty("API-Token",CLIENT_TOKEN);
-
             httpUrlConnection.setRequestProperty("User-Agent",TAG);
+
+            // 连接服务器
             if (data==null){
                 httpUrlConnection.setRequestMethod("GET");
+                httpUrlConnection.connect();
             }else{
                 httpUrlConnection.setRequestMethod("POST");
                 httpUrlConnection.setRequestProperty("Content-Type", type);
@@ -94,17 +97,19 @@ public class ApiManager {
                 outputStream.flush();
                 outputStream.close();
             }
+
             InputStream inputStream = httpUrlConnection.getInputStream();
             BufferedReader r=new BufferedReader(new InputStreamReader(inputStream));
             String l,out="";
             while (null!=(l=r.readLine())){
                 out+=l+'\n';
             }
-            get_json=out;
+            response=out;
+            httpUrlConnection.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-        return get_json;
+        return response;
     }
 }
