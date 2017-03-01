@@ -41,4 +41,18 @@ public class User {
         }
         return  false;
     }
+    public  static String beatHeart(String lastToken) throws ServerConnectException {
+        JSONObject data=new JSONObject();
+        try {
+            data.put("token",lastToken);
+            String get=ApiManager.action("user/signupcode",data.toString());
+            JSONObject object=new JSONObject(get);
+            if (object.has("token")){
+                return object.getString("token");
+            }
+        } catch (JSONException e) {
+            return null;
+        }
+        return null;
+    }
 }
