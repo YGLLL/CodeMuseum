@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import cn.atd3.support.api.JSONListener;
 import cn.atd3.support.api.ServerException;
+import cn.atd3.support.api.v1.ApiActions;
 import cn.atd3.support.api.v1.User;
 import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.activity.MainActivity;
@@ -103,8 +104,8 @@ public class SigninActivity extends AppCompatActivity{
             }
         });
     }
-
-//    //查询是否需要验证码
+// TODO: API:1
+//查询是否需要验证码
 //    private void getCheckCode(){
 //        new Thread(){
 //            @Override
@@ -127,32 +128,49 @@ public class SigninActivity extends AppCompatActivity{
 //            }
 //        }.start();
 //    }
-
+// TODO: API2
+//    private void getCheckCode(){
+//        User.checkSignInNeedCode(new JSONListener() {
+//            @Override
+//            public void onSuccess(JSONObject object) {
+//                Toast.makeText(getApplicationContext(),object.toString(),Toast.LENGTH_SHORT).show();
+//                try {
+//                    if (object.has("return")){
+//                        if (object.getBoolean("return")) {
+//                            needcode = true;
+//                            getcheckcodepicture();
+//                            checkcodelayout.setVisibility(View.VISIBLE);
+//                        }
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onError(ServerException e) {
+//                Toast.makeText(getApplicationContext(),"服务器连接错误："+e.getMessage(),Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+// TODO:API3
     private void getCheckCode(){
-        User.checkSignInNeedCode(new JSONListener() {
+        User.checkSignInNeedCode(new ApiActions() {
             @Override
-            public void onSuccess(JSONObject object) {
-                Toast.makeText(getApplicationContext(),object.toString(),Toast.LENGTH_SHORT).show();
-                try {
-                    if (object.has("return")){
-                        if (object.getBoolean("return")) {
-                            needcode = true;
-                            getcheckcodepicture();
-                            checkcodelayout.setVisibility(View.VISIBLE);
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            public void needSignInCode(boolean need) {
+                Toast.makeText(getApplicationContext(),"是否需要验证码："+need,Toast.LENGTH_SHORT).show();
+                if(need){
+                    needcode = true;
+                    getcheckcodepicture();
+                    checkcodelayout.setVisibility(View.VISIBLE);
                 }
             }
-
             @Override
-            public void onError(ServerException e) {
+            public void serverException(ServerException e) {
                 Toast.makeText(getApplicationContext(),"服务器连接错误："+e.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
     }
-
     //获取验证码图片
     private void getcheckcodepicture(){
         HttpUtil.sendHttpRequestPicture(atdcode, new HttpPictureCallbackListener() {

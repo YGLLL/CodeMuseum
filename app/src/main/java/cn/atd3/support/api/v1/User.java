@@ -33,6 +33,28 @@ public class User {
         return false;
     }
 
+
+    public static void checkSignInNeedCode(final ApiActions action) {
+        new Thread(){
+            @Override
+            public void run() {
+                boolean need= false;
+                try {
+                    need = signInCode();
+                    // 准备发送到UI线程
+                    Looper.prepare();
+                    action.needSigninCode(need);
+                    Looper.loop();
+                } catch (ServerException e) {
+                    Looper.prepare();
+                    action.serverException(e);
+                    Looper.loop();
+                }
+
+            }
+        }.start();
+    }
+
     public static void checkSignInNeedCode(final JSONListener action) {
         new Thread() {
             @Override
