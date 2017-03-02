@@ -1,5 +1,6 @@
 package cn.atd3.support;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -25,7 +26,7 @@ import java.util.Map;
  */
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
-    public static final String TAG = "CrashHandler";
+    private static final String TAG = "CrashHandler";
     private static  String name = "CrashHandler";
     private static final String PATH = "atd/crash";
     private static CrashHandler instance = new CrashHandler();
@@ -33,6 +34,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private Context context;
     ;
     private Map<String, String> infos = new HashMap<String, String>();
+    @SuppressLint("SimpleDateFormat")
     private DateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 
     private CrashHandler() {
@@ -105,13 +107,13 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         }
     }
 
-    protected void save(Throwable ex) {
+    private void save(Throwable ex) {
         Log.e(TAG,"log error",ex);
         Log.d(TAG, "prepare save file");
         insertDeviceInfo();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> enter : infos.entrySet()) {
-            sb.append(enter.getKey() + ":" + enter.getValue() + "\n");
+            sb.append("\t\t").append(enter.getKey()).append("\t:\t").append(enter.getValue()).append("\n");
         }
         Writer writer = new StringWriter();
         PrintWriter printwriter = new PrintWriter(writer);
@@ -129,15 +131,13 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             String path = Environment.getExternalStorageDirectory() + File.separator + PATH;
             File dir = new File(path);
             Log.d(TAG, "prepare directory:" + path);
-            if (!dir.exists()) {
-                dir.mkdirs();
+            if (!dir.exists() && dir.mkdirs()) {
                 Log.d(TAG, "create log directory");
             }
             try {
                 Log.d(TAG, "start write file");
                 File file = new File(path + File.separator + name + "_" + time + "_"+System.currentTimeMillis()+".log");
-                if (!file.exists()) {
-                    file.createNewFile();
+                if (!file.exists() && file.createNewFile()) {
                     Log.d(TAG, "create log file:" + file.getAbsolutePath());
                 }
                 FileOutputStream out = new FileOutputStream(file);

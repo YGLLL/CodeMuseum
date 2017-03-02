@@ -12,8 +12,8 @@ import cn.atd3.support.api.ServerException;
 public class User {
 
     /**
-     * 检测注册是否需要验证码
-     * @return
+     * 检测登陆是否需要验证码
+     * @return 是否需要验证码
      * @throws ServerException
      */
     public  static boolean signInCode() throws ServerException {
@@ -24,14 +24,14 @@ public class User {
                 return object.getBoolean("return");
             }
         } catch (JSONException e) {
-            throw new ServerException("server response format exception");
+            throw new ServerException("server response format exception",e);
         }
         return  false;
     }
 
     /**
      * 检测注册是否需要验证码
-     * @return
+     * @return 是否需要验证码
      * @throws ServerException
      */
     public  static boolean signUpCode() throws ServerException {
@@ -42,15 +42,15 @@ public class User {
                 return object.getBoolean("return");
             }
         } catch (JSONException e) {
-            throw new ServerException("server response format exception");
+            throw new ServerException("server response format exception",e);
         }
         return  false;
     }
 
     /**
      * 发送心跳包
-     * @param lastToken 上次心跳包的内容
-     * @return 本次更新的心跳包
+     * @param lastToken 上次心跳包的Token
+     * @return 本次更新的心跳包Token
      * @throws ServerException
      */
     public  static String beatHeart(String lastToken) throws ServerException {
@@ -63,7 +63,7 @@ public class User {
                 return object.getJSONObject("return").getString("token");
             }
         } catch (JSONException e) {
-            throw new ServerException("server response format exception");
+            throw new ServerException("server response format exception",e);
         }
         return null;
     }

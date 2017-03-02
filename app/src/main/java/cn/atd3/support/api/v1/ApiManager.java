@@ -25,15 +25,18 @@ import cn.atd3.support.api.ClientNoFoundException;
  *      + 添加版本命名空间区分
  */
 public class ApiManager {
-    public  static int CLIENT_ID;
-    public  static String CLIENT_TOKEN;
-    public  static String TAG="ApiClient";
+    private static int CLIENT_ID;
+    private static String CLIENT_TOKEN;
+    private static String TAG="ApiClient";
     private static String API_HOST="http://api.i.atd3.cn";
     private static String API_VERSION="v1.0";
     private static int timeOut=5000;
     private static String META_NAME="cn.atd3.support.api.v1.ClientToken";
 
-    static ApiManager instance=new ApiManager();
+    private static ApiManager instance=new ApiManager();
+
+    private ApiManager() {
+    }
 
     public static int getTimeOut() {
         return timeOut;
@@ -41,8 +44,8 @@ public class ApiManager {
 
     /**
      * 初始化API
-     * @param context
-     * @return
+     * @param context 应用环境
+     * @return 初始化情况
      */
     public boolean init(Context context) {
         ApplicationInfo appInfo = null;
@@ -63,7 +66,7 @@ public class ApiManager {
 
     /**
      * 设置请求超时
-     * @param timeOut
+     * @param timeOut 超时时间
      */
     public static void setTimeOut(int timeOut) {
         ApiManager.timeOut = timeOut;
@@ -71,7 +74,7 @@ public class ApiManager {
 
     /**
      * 获取APIManager的示例化对象
-     * @return
+     * @return ApiManager对象
      */
     public  static ApiManager getInstance(){
         return instance;
@@ -80,7 +83,7 @@ public class ApiManager {
     /**
      * 发送请求到服务器 [GET]
      * @param action 请求数据的接口
-     * @return
+     * @return 服务器返回的内容
      * @throws ServerException
      */
     public static  String action(String action)throws ServerException {
@@ -91,7 +94,7 @@ public class ApiManager {
      * 发送JSON文本到服务器
      * @param action 请求数据的接口
      * @param data 发送到服务器的文本数据
-     * @return
+     * @return 服务器返回的内容
      * @throws ServerException
      */
     public static  String action(String action,String data)throws ServerException {
@@ -102,7 +105,7 @@ public class ApiManager {
      * 发送JSON数据到服务器
      * @param action 请求数据的接口
      * @param data 发送到服务器的数据
-     * @return
+     * @return 服务器返回的内容
      * @throws ServerException
      */
     public static  String action(String action,JSONObject data)throws ServerException {
@@ -114,7 +117,7 @@ public class ApiManager {
      * @param action 请求数据的接口
      * @param data 发送到服务器的数据
      * @param type 数据的类型
-     * @return
+     * @return 服务器返回的内容
      * @throws ServerException
      */
     public static  String action(String action,String data,String type) throws ServerException {
