@@ -14,12 +14,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
-
+import cn.atd3.support.api.JSONListener;
+import cn.atd3.support.api.ServerException;
+import cn.atd3.support.api.v1.User;
 import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.activity.MainActivity;
 import cn.atd3.ygl.codemuseum.service.BeatService;
@@ -27,7 +27,7 @@ import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
 import cn.atd3.ygl.codemuseum.util.HttpPictureCallbackListener;
 import cn.atd3.ygl.codemuseum.util.HttpUtil;
 
-import static cn.atd3.ygl.codemuseum.service.BeatService.beattoke
+import static cn.atd3.ygl.codemuseum.util.Utility.beattoken;
 
 /**
  * Created by YGL on 2017/2/20.
@@ -75,7 +75,7 @@ public class SigninActivity extends AppCompatActivity{
         //隐藏验证码相关控件
         checkcodelayout.setVisibility(View.INVISIBLE);
 
-        getcheckcode();//查询验证码
+        getCheckCode();//查询验证码
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,34 +104,55 @@ public class SigninActivity extends AppCompatActivity{
         });
     }
 
-    //查询是否需要验证码
-    private void getcheckcode(){
-        String jsonString="{}";
-        HttpUtil.sendHttpRequest(atdneedcode, jsonString, new HttpCallbackListener() {
+//    //查询是否需要验证码
+//    private void getCheckCode(){
+//        new Thread(){
+//            @Override
+//            public void run() {
+//                try {
+//                    if (User.signInCode()){
+//                        needcode=true;
+//                        getcheckcodepicture();
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                //显示验证码相关控件
+//                                checkcodelayout.setVisibility(View.VISIBLE);
+//                            }
+//                        });
+//                    }
+//                } catch (ServerException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }.start();
+//    }
+
+    private void getCheckCode(){
+        User.checkSignInNeedCode(new JSONListener() {
             @Override
-            public void onFinish(String response) {
-                try{
-                    JSONObject jsonObject=new JSONObject(response);
-                    if(jsonObject.getString("return").equals("true")){
-                        needcode=true;
-                        getcheckcodepicture();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //显示验证码相关控件
-                                checkcodelayout.setVisibility(View.VISIBLE);
-                            }
-                        });
+            public void onSuccess(JSONObject object) {
+                Toast.makeText(getApplicationContext(),object.toString(),Toast.LENGTH_SHORT).show();
+                try {
+                    if (object.has("return")){
+                        if (object.getBoolean("return")) {
+                            needcode = true;
+                            getcheckcodepicture();
+                            checkcodelayout.setVisibility(View.VISIBLE);
+                        }
                     }
-                }catch (JSONException e){e.printStackTrace();}
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
-            public void onError(Exception e) {
-                e.printStackTrace();
+            public void onError(ServerException e) {
+                Toast.makeText(getApplicationContext(),"服务器连接错误："+e.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     //获取验证码图片
     private void getcheckcodepicture(){
         HttpUtil.sendHttpRequestPicture(atdcode, new HttpPictureCallbackListener() {
@@ -242,13 +263,13 @@ public class SigninActivity extends AppCompatActivity{
         try{
             JSONObject jsonObject=new JSONObject(response);
             if(jsonObject.has("error")){
-                getcheckcode();//刷新验证码
+                getCheckCode();//刷新验证码
                 closeProgressDialog();
                 toastPrintf("验证码错误");
             }else {
                 String returnstring=jsonObject.getString("return");
                 if(returnstring.equals("false")){
-                    getcheckcode();//刷新验证码
+                    getCheckCode();//刷新验证码
                     closeProgressDialog();
                     toastPrintf("密码错误");
                 }else {

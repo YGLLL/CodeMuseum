@@ -3,6 +3,7 @@ package cn.atd3.support.api.v1;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -124,6 +125,7 @@ public class ApiManager {
         String address=API_HOST+'/'+API_VERSION+'/'+action;
         String response="";
         try {
+            Log.e("Connect","prepare connect");
             // 创建连接
             HttpURLConnection httpUrlConnection =(HttpURLConnection)new URL(address).openConnection();
             // 设置服务器属性
@@ -152,7 +154,7 @@ public class ApiManager {
                 outputStream.flush();
                 outputStream.close();
             }
-
+            Log.e("Connect","connected");
             InputStream inputStream = httpUrlConnection.getInputStream();
             BufferedReader r=new BufferedReader(new InputStreamReader(inputStream));
             String l,out="";
@@ -162,6 +164,7 @@ public class ApiManager {
             response=out;
             httpUrlConnection.disconnect();
         } catch (IOException e) {
+            Log.e("Connect","connected exception",e);
             throw new ServerException("read response failed",e);
         }
         return response;
