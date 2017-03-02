@@ -14,7 +14,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import cn.atd3.support.api.ServerConnectException;
+import cn.atd3.support.api.ServerException;
 import cn.atd3.support.api.ClientNoFoundException;
 
 /**
@@ -25,20 +25,28 @@ import cn.atd3.support.api.ClientNoFoundException;
  *      + 添加版本命名空间区分
  */
 public class ApiManager {
-    public  static int CLIENT_ID;
-    public  static String CLIENT_TOKEN;
-    public  static String TAG="ApiClient";
+    private static int CLIENT_ID;
+    private static String CLIENT_TOKEN;
+    private static String TAG="ApiClient";
     private static String API_HOST="http://api.i.atd3.cn";
     private static String API_VERSION="v1.0";
     private static int timeOut=5000;
     private static String META_NAME="cn.atd3.support.api.v1.ClientToken";
 
-    static ApiManager instance=new ApiManager();
+    private static ApiManager instance=new ApiManager();
+
+    private ApiManager() {
+    }
 
     public static int getTimeOut() {
         return timeOut;
     }
 
+    /**
+     * 初始化API
+     * @param context 应用环境
+     * @return 初始化情况
+     */
     public boolean init(Context context) {
         ApplicationInfo appInfo = null;
         try {
@@ -51,31 +59,68 @@ public class ApiManager {
                 CLIENT_TOKEN=msg.substring(pos+1);
             }
         } catch (PackageManager.NameNotFoundException e) {
-            throw new ClientNoFoundException("client info no find in manifast",e.getCause());
+            throw new ClientNoFoundException("client info no found in manifast",e.getCause());
         }
         return  true;
     }
+
+    /**
+     * 设置请求超时
+     * @param timeOut 超时时间
+     */
     public static void setTimeOut(int timeOut) {
         ApiManager.timeOut = timeOut;
     }
+
+    /**
+     * 获取APIManager的示例化对象
+     * @return ApiManager对象
+     */
     public  static ApiManager getInstance(){
         return instance;
     }
 
-
-    public static  String action(String action)throws ServerConnectException {
-        return action(action,null,"application/json");
+    /**
+     * 发送请求到服务器 [GET]
+     * @param action 请求数据的接口
+     * @return 服务器返回的内容
+     * @throws ServerException
+     */
+    public static  String action(String action)throws ServerException {
+        return action(action,null,null);
     }
 
-    public static  String action(String action,String data)throws ServerConnectException {
+    /**
+     * 发送JSON文本到服务器
+     * @param action 请求数据的接口
+     * @param data 发送到服务器的文本数据
+     * @return 服务器返回的内容
+     * @throws ServerException
+     */
+    public static  String action(String action,String data)throws ServerException {
         return action(action,data,"application/json");
     }
 
-    public static  String action(String action,JSONObject data)throws ServerConnectException {
+    /**
+     * 发送JSON数据到服务器
+     * @param action 请求数据的接口
+     * @param data 发送到服务器的数据
+     * @return 服务器返回的内容
+     * @throws ServerException
+     */
+    public static  String action(String action,JSONObject data)throws ServerException {
         return action(action,data.toString(),"application/json");
     }
 
-    public static  String action(String action,String data,String type) throws ServerConnectException {
+    /**
+     * 发送String数据到服务器，自动添加客户端授权信息
+     * @param action 请求数据的接口
+     * @param data 发送到服务器的数据
+     * @param type 数据的类型
+     * @return 服务器返回的内容
+     * @throws ServerException
+     */
+    public static  String action(String action,String data,String type) throws ServerException {
         String address=API_HOST+'/'+API_VERSION+'/'+action;
         String response="";
         try {
@@ -117,7 +162,7 @@ public class ApiManager {
             response=out;
             httpUrlConnection.disconnect();
         } catch (IOException e) {
-            throw new ServerConnectException("read response failed",e);
+            throw new ServerException("read response failed",e);
         }
         return response;
     }
