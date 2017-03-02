@@ -23,8 +23,6 @@ import cn.atd3.support.api.v1.User;
 import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
 import cn.atd3.ygl.codemuseum.util.HttpUtil;
 
-import static cn.atd3.ygl.codemuseum.util.Utility.beattoken;
-
 /**
  * Created by YGL on 2017/2/27.
  */

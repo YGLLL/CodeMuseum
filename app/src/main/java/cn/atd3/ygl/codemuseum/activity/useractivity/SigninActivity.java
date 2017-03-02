@@ -27,8 +27,7 @@ import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
 import cn.atd3.ygl.codemuseum.util.HttpPictureCallbackListener;
 import cn.atd3.ygl.codemuseum.util.HttpUtil;
 
-import static cn.atd3.ygl.codemuseum.util.Utility.beattoken;
-import static cn.atd3.ygl.codemuseum.util.Utility.urlAddT;
+import static cn.atd3.ygl.codemuseum.service.BeatService.beattoken;
 
 /**
  * Created by YGL on 2017/2/20.
@@ -111,18 +110,20 @@ public class SigninActivity extends AppCompatActivity{
         HttpUtil.sendHttpRequest(atdneedcode, jsonString, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                Log.e("getcheckcode",response);
-                if((response.indexOf("return")!=-1)&&(response.indexOf("true")!=-1)){
-                    needcode=true;
-                    getcheckcodepicture();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //显示验证码相关控件
-                            checkcodelayout.setVisibility(View.VISIBLE);
-                        }
-                    });
-                }
+                try{
+                    JSONObject jsonObject=new JSONObject(response);
+                    if(jsonObject.getString("return").equals("true")){
+                        needcode=true;
+                        getcheckcodepicture();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //显示验证码相关控件
+                                checkcodelayout.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }
+                }catch (JSONException e){e.printStackTrace();}
             }
 
             @Override
@@ -223,8 +224,6 @@ public class SigninActivity extends AppCompatActivity{
         }catch (JSONException e){
             e.printStackTrace();
         }
-        Log.e("提交url",atdsignin);
-        Log.e("提交json",jsonString);
         HttpUtil.sendHttpRequest(atdsignin, jsonString, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
@@ -240,33 +239,35 @@ public class SigninActivity extends AppCompatActivity{
 
     //登陆反馈
     private void signinfeedback(String response){
-        Log.e("response",response);
-        String token=getSignintoken(response);
-        if(!TextUtils.isEmpty(token)){
-            Log.e("beattoken",token);
-            beattoken=token;
-            Intent intent=new Intent(SigninActivity.this, BeatService.class);
-            startService(intent);
-            closeProgressDialog();
-            toastPrintf("登陆成功");
-            Intent mainintent=new Intent(SigninActivity.this,MainActivity.class);
-            startActivity(mainintent);
-            finish();
-        }else {
-            getcheckcode();//查询验证码
-            closeProgressDialog();
-            toastPrintf("出现未知错误，请重试");
-        }
-    }
-
-    private String getSignintoken(String response){
-        String token="";
         try{
             JSONObject jsonObject=new JSONObject(response);
-            jsonObject=jsonObject.getJSONObject("token");
-            token=jsonObject.getString("user");
-        }catch (JSONException e){e.printStackTrace();}
-        return  token;
+            if(jsonObject.has("error")){
+                getcheckcode();//刷新验证码
+                closeProgressDialog();
+                toastPrintf("验证码错误");
+            }else {
+                String returnstring=jsonObject.getString("return");
+                if(returnstring.equals("false")){
+                    getcheckcode();//刷新验证码
+                    closeProgressDialog();
+                    toastPrintf("密码错误");
+                }else {
+                    if(returnstring.equals("true")){
+                        jsonObject=jsonObject.getJSONObject("token");
+                        beattoken=jsonObject.getString("user");
+                        Intent intent=new Intent(SigninActivity.this, BeatService.class);
+                        startService(intent);
+                        closeProgressDialog();
+                        toastPrintf("登陆成功");
+                        Intent mainintent=new Intent(SigninActivity.this,MainActivity.class);
+                        startActivity(mainintent);
+                        finish();
+                    }
+                }
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
     }
 
     /**   * 显示进度对话框   */
