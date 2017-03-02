@@ -157,7 +157,7 @@ public class SigninActivity extends AppCompatActivity{
     private void getCheckCode(){
         User.checkSignInNeedCode(new ApiActions() {
             @Override
-            public void needSignInCode(boolean need) {
+            public void checkSignInNeedCode(boolean need) {
                 Toast.makeText(getApplicationContext(),"是否需要验证码："+need,Toast.LENGTH_SHORT).show();
                 if(need){
                     needcode = true;

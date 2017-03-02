@@ -43,7 +43,7 @@ public class User {
                     need = signInCode();
                     // 准备发送到UI线程
                     Looper.prepare();
-                    action.needSigninCode(need);
+                    action.checkSignInNeedCode(need);
                     Looper.loop();
                 } catch (ServerException e) {
                     Looper.prepare();
