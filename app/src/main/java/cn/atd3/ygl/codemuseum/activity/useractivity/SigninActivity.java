@@ -27,7 +27,7 @@ import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
 import cn.atd3.ygl.codemuseum.util.HttpPictureCallbackListener;
 import cn.atd3.ygl.codemuseum.util.HttpUtil;
 
-import static cn.atd3.ygl.codemuseum.service.BeatService.beattoken;
+import static cn.atd3.ygl.codemuseum.service.BeatService.beattoke
 
 /**
  * Created by YGL on 2017/2/20.

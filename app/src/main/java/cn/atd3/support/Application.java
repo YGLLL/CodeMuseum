@@ -1,6 +1,5 @@
 package cn.atd3.support;
 
-
 import cn.atd3.support.api.v1.ApiManager;
 
 /**

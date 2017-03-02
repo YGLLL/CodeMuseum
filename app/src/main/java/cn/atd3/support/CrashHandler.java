@@ -24,6 +24,7 @@ import java.util.Map;
  * Created by DXkite on 2017/2/14 0014.
  */
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
+
     public static final String TAG = "CrashHandler";
     private static  String name = "CrashHandler";
     private static final String PATH = "atd/crash";

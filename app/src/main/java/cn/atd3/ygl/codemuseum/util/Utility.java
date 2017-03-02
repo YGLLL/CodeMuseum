@@ -12,6 +12,8 @@ import java.util.Date;
 public class Utility {
     //在这里解析JSON数据
 
+    public static String beattoken="";
+
     /*******
     public static String urlAddT(String url){
         return url+"&t="+String.valueOf(new Date().getTime());
