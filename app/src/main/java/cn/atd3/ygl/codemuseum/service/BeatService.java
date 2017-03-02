@@ -8,7 +8,6 @@ import android.util.Log;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import cn.atd3.support.api.ServerException;
 import cn.atd3.support.api.v1.User;
 
@@ -37,11 +36,13 @@ public class BeatService extends Service{
                     Log.v(TAG,"after_beat:"+beattoken);
                 } catch (ServerException e) {
                     e.printStackTrace();
+
                 }
             }
         };
         ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
         ses.scheduleAtFixedRate(runnable,50,50, TimeUnit.SECONDS);
         return super.onStartCommand(intent,flags,startId);
+
     }
 }

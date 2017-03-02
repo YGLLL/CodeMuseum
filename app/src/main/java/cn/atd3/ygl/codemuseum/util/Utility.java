@@ -14,7 +14,9 @@ public class Utility {
     // TODO：心跳包Token用数据库或者文件存储
     public static String beattoken="";
 
+    /*******
     public static String urlAddT(String url){
         return url+"&t="+String.valueOf(new Date().getTime());
     }
+     **************/
 }
