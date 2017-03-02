@@ -48,19 +48,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-        // TODO: 删除这个
-        /**
-        // 测试API
-        new Thread(){
-            @Override
-            public void run() {
-                try {
-                    Log.i(ApiManager.TAG,"signin need code:"+User.signInCode());
-                } catch (ServerConnectException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();**/
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
