@@ -87,7 +87,7 @@ public class ApiManager {
      * @throws ServerException
      */
     public static  String action(String action)throws ServerException {
-        return action(action,null,"application/json");
+        return action(action,null,null);
     }
 
     /**
