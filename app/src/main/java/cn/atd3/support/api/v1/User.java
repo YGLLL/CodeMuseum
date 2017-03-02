@@ -24,7 +24,7 @@ public class User {
                 return object.getBoolean("return");
             }
         } catch (JSONException e) {
-            return  false;
+            throw new ServerException("server response format exception");
         }
         return  false;
     }
@@ -42,7 +42,7 @@ public class User {
                 return object.getBoolean("return");
             }
         } catch (JSONException e) {
-            return  false;
+            throw new ServerException("server response format exception");
         }
         return  false;
     }
@@ -63,7 +63,7 @@ public class User {
                 return object.getJSONObject("return").getString("token");
             }
         } catch (JSONException e) {
-            return null;
+            throw new ServerException("server response format exception");
         }
         return null;
     }
