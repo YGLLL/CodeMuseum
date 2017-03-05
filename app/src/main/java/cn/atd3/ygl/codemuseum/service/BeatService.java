@@ -10,9 +10,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import cn.atd3.support.api.ServerException;
 import cn.atd3.support.api.v1.User;
-
-import static cn.atd3.ygl.codemuseum.util.Utility.beattoken;
-
 /**
  * Created by YGL on 2017/2/27.
  * 心跳包发送服务
@@ -20,6 +17,10 @@ import static cn.atd3.ygl.codemuseum.util.Utility.beattoken;
  */
 public class BeatService extends Service{
     final  String TAG="BeatServer";
+
+    // TODO：心跳包Token用数据库或者文件存储
+    public static String beattoken="";
+
     @Override
     public IBinder onBind(Intent intent){
         return null;
