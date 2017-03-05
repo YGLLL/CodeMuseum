@@ -14,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import cn.atd3.support.api.ServerException;
+import cn.atd3.support.api.v1.ApiActions;
+import cn.atd3.support.api.v1.User;
 import cn.atd3.ygl.codemuseum.activity.MainActivity;
 import cn.atd3.ygl.codemuseum.service.BeatService;
 import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
@@ -30,13 +33,6 @@ import java.util.regex.Pattern;
  */
 
 public class SignUpActivity extends AppCompatActivity{
-    private final String atdhome="http://api.i.atd3.cn";
-    private final String key="token=c7b04d1534f1ed7bb9241cf5fe6ea11e&client=1";
-    private final String atdcode=atdhome+"/v1.0/verify_image?"+key;
-    private final String atdneedcode=atdhome+"/v1.0/user/signupcode?"+key;
-    private final String atdsignup=atdhome+"/v1.0/user/signup?"+key;
-    private final String atdcheckname=atdhome+"/v1.0/user/checkname?"+key;
-    private final String atdcheckemail=atdhome+"/v1.0/user/checkemail?"+key;
 
     private EditText signup_userid;
     private EditText signup_userpassword1;
@@ -98,37 +94,33 @@ public class SignUpActivity extends AppCompatActivity{
 
     //查询是否需要验证码
     private void getcheckcode(){
-        String jsonString="{}";
-        HttpUtil.sendHttpRequest(atdneedcode, jsonString, new HttpCallbackListener() {
+        User.checkSignUpNeedCode(new ApiActions() {
             @Override
-            public void onFinish(String response) {
-                try{
-                    JSONObject jsonObject=new JSONObject(response);
-                    if(jsonObject.getString("return").equals("true")){
-                        needcode=true;
-                        getcheckcodepicture();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //显示验证码相关控件
-                                relativeLayout.setVisibility(View.VISIBLE);
-                            }
-                        });
-                    }
-                }catch (JSONException e){e.printStackTrace();}
+            public void checkSignUpNeedCode(boolean need){
+                if(need){
+                    needcode=true;
+                    getcheckcodepicture();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //显示验证码相关控件
+                            relativeLayout.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
             }
-
             @Override
-            public void onError(Exception e) {
+            public void serverException(ServerException e) {
                 e.printStackTrace();
             }
         });
     }
+
     //获取验证码图片
     private void getcheckcodepicture(){
-        HttpUtil.sendHttpRequestPicture(atdcode, new HttpPictureCallbackListener() {
+        User.getCodePicture(new ApiActions() {
             @Override
-            public void onFinish(final Bitmap bitmap) {
+            public void getCodePicture(final Bitmap bitmap){
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -136,9 +128,8 @@ public class SignUpActivity extends AppCompatActivity{
                     }
                 });
             }
-
             @Override
-            public void onError(Exception e) {
+            public void serverException(ServerException e) {
                 e.printStackTrace();
             }
         });
@@ -213,36 +204,24 @@ public class SignUpActivity extends AppCompatActivity{
         }catch (JSONException e){
             e.printStackTrace();
         }
-        HttpUtil.sendHttpRequest(atdsignup, jsonString, new HttpCallbackListener() {
+        User.userSignUp(jsonString, new ApiActions() {
             @Override
-            public void onFinish(String response) {
-                closeProgressDialog();
-                signupfeedback(response);
-            }
-
-            @Override
-            public void onError(Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-    private void signupfeedback(String response){
-        try{
-            JSONObject jsonObject=new JSONObject(response);
-            if(jsonObject.has("error")){
-                getcheckcode();//刷新验证码
-                toastPrintf("验证码错误");
-            }else {
-                jsonObject=jsonObject.getJSONObject("return");
-                if(jsonObject.has("uid")){
+            public void userSignUp(boolean success,String message){
+                closeProgressDialog();//关闭等待动画
+                if(success){
                     //注册成功
                     toastPrintf("注册成功");
                     finish();
+                }else {
+                    getcheckcode();//刷新验证码
+                    toastPrintf("验证码错误");
                 }
             }
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
+            @Override
+            public void serverException(ServerException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private boolean  isUserValid(String username) {
@@ -252,53 +231,39 @@ public class SignUpActivity extends AppCompatActivity{
         return Pattern.compile("^([a-zA-Z0-9_\\.\\-\\+])+\\@(([a-zA-Z0-9\\-]+\\.))+([a-zA-Z0-9]{2,4})+$").matcher(email).matches();
     }
     private void checknameoremail(final String key,final String value){
-        String url;
         if(key.equals("name")){
-            url=atdcheckname;
-        }else {
-            url=atdcheckemail;
-        }
-        String jsonString="";
-        try{
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put(key,value);
-            jsonString=String.valueOf(jsonObject);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        HttpUtil.sendHttpRequest(url, jsonString, new HttpCallbackListener() {
-            @Override
-            public void onFinish(String response) {
-                try{
-                    JSONObject jsonObject=new JSONObject(response);
-                    String str=jsonObject.getString("return");
-                    if(str.equals("true")){
-                        //如果用户名或邮箱已被使用
-                        if(key.equals("name")){
-                            closeProgressDialog();
-                            toastPrintf("用户名已被使用");
-                        }else {
-                            closeProgressDialog();
-                            toastPrintf("邮箱已经注册过");
-                        }
+            User.checkUserId(value, new ApiActions() {
+                @Override
+                public void checkUserId(boolean have){
+                    if(have){
+                        closeProgressDialog();
+                        toastPrintf("用户名已被使用");
                     }else {
-                        //用户名和邮箱未被使用
-                        if(key.equals("name")){
-                            examineuserpossword();
-                        }else {
-                            examinecheckcode();
-                        }
+                        examineuserpossword();
                     }
-                }catch (JSONException e){
+                }
+                @Override
+                public void serverException(ServerException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                e.printStackTrace();
-            }
-        });
+            });
+        }else {
+            User.checkUserEmail(value, new ApiActions() {
+                @Override
+                public void checkUserEmail(boolean have){
+                    if(have){
+                        closeProgressDialog();
+                        toastPrintf("邮箱已经注册过");
+                    }else {
+                        examinecheckcode();
+                    }
+                }
+                @Override
+                public void serverException(ServerException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
     }
 
     /**   * 显示进度对话框   */

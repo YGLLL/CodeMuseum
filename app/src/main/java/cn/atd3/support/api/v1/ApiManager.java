@@ -3,10 +3,13 @@ package cn.atd3.support.api.v1;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -165,5 +168,45 @@ public class ApiManager {
             throw new ServerException("read response failed",e);
         }
         return response;
+    }
+
+    public static Bitmap getHttpPicture(String action)throws ServerException {
+        String address=API_HOST+'/'+API_VERSION+'/'+action;
+        Bitmap bitmap=null;
+        try {
+            // 创建连接
+            HttpURLConnection httpUrlConnection =(HttpURLConnection)new URL(address).openConnection();
+            // 设置服务器属性
+            httpUrlConnection.setDoOutput(true);
+            httpUrlConnection.setDoInput(true);
+            httpUrlConnection.setUseCaches(false);
+            httpUrlConnection.setConnectTimeout(timeOut);
+            httpUrlConnection.setReadTimeout(timeOut);
+
+            // 压入客户端验证信息
+            httpUrlConnection.setRequestProperty("API-Client",""+CLIENT_ID);
+            httpUrlConnection.setRequestProperty("API-Token",CLIENT_TOKEN);
+            httpUrlConnection.setRequestProperty("User-Agent",TAG);
+
+            // 连接服务器
+            httpUrlConnection.setRequestMethod("GET");
+            httpUrlConnection.connect();
+
+            //接收服务器数据
+            InputStream in=httpUrlConnection.getInputStream();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] bytes = new byte[1024];
+            int length = -1;
+            while ((length = in.read(bytes)) != -1) {
+                bos.write(bytes, 0, length);
+            }
+            byte[] picByte = bos.toByteArray();
+            bos.close();
+            in.close();
+            bitmap= BitmapFactory.decodeByteArray(picByte, 0, picByte.length);
+        } catch (IOException e) {
+            throw new ServerException("read response failed",e);
+        }
+        return bitmap;
     }
 }

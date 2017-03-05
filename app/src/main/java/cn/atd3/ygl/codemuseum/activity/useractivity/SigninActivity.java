@@ -20,6 +20,9 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
+import cn.atd3.support.api.ServerException;
+import cn.atd3.support.api.v1.ApiActions;
+import cn.atd3.support.api.v1.User;
 import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.activity.MainActivity;
 import cn.atd3.ygl.codemuseum.service.BeatService;
@@ -34,15 +37,6 @@ import static cn.atd3.ygl.codemuseum.service.BeatService.beattoken;
  */
 
 public class SigninActivity extends AppCompatActivity{
-    private final String atdhome="http://api.i.atd3.cn";
-    private final String key="token=c7b04d1534f1ed7bb9241cf5fe6ea11e&client=1";
-    private final String atdsignin=atdhome+"/v1.0/user/signin?"+key;
-    private final String atdinfo=atdhome+"/v1.0/user/info?"+key;
-    private final String atdsendmassage=atdhome+"/v1.0/msg/send?"+key;
-    private final String atdinbox=atdhome+"/v1.0/msg/inbox?"+key;
-    private final String atdcode=atdhome+"/v1.0/verify_image?"+key;
-    private final String atdneedcode=atdhome+"/v1.0/user/signincode?"+key;
-    private final String atdcheckname=atdhome+"/v1.0/user/checkname?"+key;
 
     private EditText userId;
     private EditText userPassword;
@@ -106,37 +100,33 @@ public class SigninActivity extends AppCompatActivity{
 
     //查询是否需要验证码
     private void getcheckcode(){
-        String jsonString="{}";
-        HttpUtil.sendHttpRequest(atdneedcode, jsonString, new HttpCallbackListener() {
+        User.checkSignInNeedCode(new ApiActions() {
             @Override
-            public void onFinish(String response) {
-                try{
-                    JSONObject jsonObject=new JSONObject(response);
-                    if(jsonObject.getString("return").equals("true")){
-                        needcode=true;
-                        getcheckcodepicture();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //显示验证码相关控件
-                                checkcodelayout.setVisibility(View.VISIBLE);
-                            }
-                        });
-                    }
-                }catch (JSONException e){e.printStackTrace();}
+            public void checkSignInNeedCode(boolean need){
+                if(need){
+                    needcode=true;
+                    getcheckcodepicture();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //显示验证码相关控件
+                            checkcodelayout.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
             }
-
             @Override
-            public void onError(Exception e) {
+            public void serverException(ServerException e) {
                 e.printStackTrace();
             }
         });
     }
+
     //获取验证码图片
     private void getcheckcodepicture(){
-        HttpUtil.sendHttpRequestPicture(atdcode, new HttpPictureCallbackListener() {
+        User.getCodePicture(new ApiActions() {
             @Override
-            public void onFinish(final Bitmap bitmap) {
+            public void getCodePicture(final Bitmap bitmap){
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -144,13 +134,13 @@ public class SigninActivity extends AppCompatActivity{
                     }
                 });
             }
-
             @Override
-            public void onError(Exception e) {
+            public void serverException(ServerException e) {
                 e.printStackTrace();
             }
         });
     }
+
 
     //验证用户名
     private void examinename(final String value){
@@ -159,34 +149,19 @@ public class SigninActivity extends AppCompatActivity{
             toastPrintf("请输入用户名");
             return;
         }
-        String jsonString="";
-        try{
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("name",value);
-            jsonString=jsonObject.toString();
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        HttpUtil.sendHttpRequest(atdcheckname, jsonString, new HttpCallbackListener() {
+        User.checkUserId(value, new ApiActions() {
             @Override
-            public void onFinish(String response) {
-                try{
-                    JSONObject jsonObject=new JSONObject(response);
-                    String str=jsonObject.getString("return");
-                    if(str.equals("true")){
-                        //用户名存在
-                        examineuserObject();
-                    }else {
-                        closeProgressDialog();
-                        toastPrintf("用户名不存在");
-                    }
-                }catch (JSONException e){
-                    e.printStackTrace();
+            public void checkUserId(boolean have){
+                if(have){
+                    //用户名存在
+                    examineuserObject();
+                }else {
+                    closeProgressDialog();
+                    toastPrintf("用户名不存在");
                 }
             }
-
             @Override
-            public void onError(Exception e) {
+            public void serverException(ServerException e) {
                 e.printStackTrace();
             }
         });
@@ -224,50 +199,33 @@ public class SigninActivity extends AppCompatActivity{
         }catch (JSONException e){
             e.printStackTrace();
         }
-        HttpUtil.sendHttpRequest(atdsignin, jsonString, new HttpCallbackListener() {
+        User.userSignIn(jsonString, new ApiActions() {
             @Override
-            public void onFinish(String response) {
-                signinfeedback(response);
-            }
-
-            @Override
-            public void onError(Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    //登陆反馈
-    private void signinfeedback(String response){
-        try{
-            JSONObject jsonObject=new JSONObject(response);
-            if(jsonObject.has("error")){
-                getcheckcode();//刷新验证码
-                closeProgressDialog();
-                toastPrintf("验证码错误");
-            }else {
-                String returnstring=jsonObject.getString("return");
-                if(returnstring.equals("false")){
-                    getcheckcode();//刷新验证码
-                    closeProgressDialog();
-                    toastPrintf("密码错误");
+            public void userSignIn(boolean success,String message){
+                closeProgressDialog();//关闭等待动画
+                if(success){
+                    beattoken=message;
+                    Intent intent=new Intent(SigninActivity.this, BeatService.class);
+                    startService(intent);
+                    Intent mainintent=new Intent(SigninActivity.this,MainActivity.class);
+                    startActivity(mainintent);
+                    toastPrintf("登陆成功");
+                    finish();
                 }else {
-                    if(returnstring.equals("true")){
-                        jsonObject=jsonObject.getJSONObject("token");
-                        beattoken=jsonObject.getString("user");
-                        Intent intent=new Intent(SigninActivity.this, BeatService.class);
-                        startService(intent);
-                        closeProgressDialog();
-                        toastPrintf("登陆成功");
-                        Intent mainintent=new Intent(SigninActivity.this,MainActivity.class);
-                        startActivity(mainintent);
-                        finish();
+                    if(message.equals("codeerror")){
+                        getcheckcode();//刷新验证码
+                        toastPrintf("验证码错误");
+                    }else {
+                        getcheckcode();//刷新验证码
+                        toastPrintf("密码错误");
                     }
                 }
             }
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
+            @Override
+            public void serverException(ServerException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**   * 显示进度对话框   */

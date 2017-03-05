@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import cn.atd3.support.api.ServerException;
+import cn.atd3.support.api.v1.ApiActions;
 import cn.atd3.support.api.v1.User;
 /**
  * Created by YGL on 2017/2/27.
@@ -31,14 +32,16 @@ public class BeatService extends Service{
         Runnable runnable=new Runnable() {
             @Override
             public void run() {
-                Log.v(TAG,"before_beat:"+beattoken);
-                try {
-                    beattoken=User.beatHeart(beattoken);
-                    Log.v(TAG,"after_beat:"+beattoken);
-                } catch (ServerException e) {
-                    e.printStackTrace();
-
-                }
+                User.beatHeart(beattoken, new ApiActions() {
+                    @Override
+                    public void beatHeart(String nextToken){
+                        beattoken=nextToken;
+                    }
+                    @Override
+                    public void serverException(ServerException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
         };
         ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
