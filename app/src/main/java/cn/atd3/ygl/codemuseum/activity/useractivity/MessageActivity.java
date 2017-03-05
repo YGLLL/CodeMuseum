@@ -18,8 +18,6 @@ import cn.atd3.ygl.codemuseum.util.MessageAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cn.atd3.ygl.codemuseum.util.Utility.beattoken;
-
 /**
  * Created by YGL on 2017/2/20.
  */

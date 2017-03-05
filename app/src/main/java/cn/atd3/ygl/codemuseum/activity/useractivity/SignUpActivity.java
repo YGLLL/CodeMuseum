@@ -25,8 +25,6 @@ import org.json.JSONObject;
 
 import java.util.regex.Pattern;
 
-import static cn.atd3.ygl.codemuseum.util.Utility.beattoken;
-
 /**
  * Created by YGL on 2017/2/20.
  */
