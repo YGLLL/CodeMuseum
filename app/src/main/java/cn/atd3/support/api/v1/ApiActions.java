@@ -19,5 +19,6 @@ public abstract class ApiActions {
     public void userSignUp(boolean success,String message){ Log.i(TAG,"userSignIn"); }
     public void userSignIn(boolean success,String message){ Log.i(TAG,"userSignIn"); }
     public void beatHeart(String nextToken){Log.i(TAG,"beatHeart");}
+    public void getUserInformation(String information){Log.i(TAG,"getUserInformation");}
     abstract public void serverException(ServerException e);
 }

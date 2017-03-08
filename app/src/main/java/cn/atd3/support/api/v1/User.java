@@ -1,6 +1,7 @@
 package cn.atd3.support.api.v1;
 
 import android.os.Looper;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -194,6 +195,33 @@ public class User {
                     JSONObject jsonObject=new JSONObject(get);
                     if (jsonObject.has("return")){
                         apiActions.beatHeart(jsonObject.getJSONObject("return").getString("token"));
+                    }
+                }catch (ServerException e){
+                    apiActions.serverException(e);
+                }catch (JSONException e){
+                    apiActions.serverException(new ServerException("server response format exception", e));
+                }
+            }
+        }).start();
+    }
+
+    /*
+    查询用户信息
+     */
+    public static void getUserInformation(final String token,final ApiActions apiActions){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONObject jsonObject=new JSONObject();
+                    jsonObject.put("user",token);
+                    jsonObject.put("expire",3600);
+                    JSONObject jsonvalue=new JSONObject();
+                    jsonvalue.put("token",jsonObject);
+                    String get=ApiManager.action("user/info",jsonvalue);
+                    jsonvalue=new JSONObject(get);
+                    if (jsonvalue.has("return")){
+                        apiActions.getUserInformation(jsonvalue.toString());
                     }
                 }catch (ServerException e){
                     apiActions.serverException(e);

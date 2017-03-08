@@ -204,10 +204,7 @@ public class SigninActivity extends AppCompatActivity{
                     beattoken=message;
                     Intent intent=new Intent(SigninActivity.this, BeatService.class);
                     startService(intent);
-                    Intent mainintent=new Intent(SigninActivity.this,MainActivity.class);
-                    startActivity(mainintent);
-                    toastPrintf("登陆成功");
-                    finish();
+                    getInfo();//查询用户信息
                 }else {
                     if(message.equals("codeerror")){
                         getcheckcode();//刷新验证码
@@ -217,6 +214,24 @@ public class SigninActivity extends AppCompatActivity{
                         toastPrintf("密码错误");
                     }
                 }
+            }
+            @Override
+            public void serverException(ServerException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    //查询用户信息
+    private void getInfo(){
+        User.getUserInformation(beattoken, new ApiActions() {
+            @Override
+            public void getUserInformation(String information){
+                Intent mainintent=new Intent();
+                mainintent.putExtra("information",information);
+                setResult(RESULT_OK,mainintent);
+                toastPrintf("登陆成功");
+                finish();
             }
             @Override
             public void serverException(ServerException e) {

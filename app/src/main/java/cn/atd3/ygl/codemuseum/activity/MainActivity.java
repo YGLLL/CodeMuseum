@@ -8,13 +8,29 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Iterator;
+
+import cn.atd3.support.api.ServerException;
+import cn.atd3.support.api.v1.ApiActions;
+import cn.atd3.support.api.v1.User;
+import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.activity.useractivity.MessageActivity;
 import cn.atd3.ygl.codemuseum.activity.useractivity.SettingActivity;
 import cn.atd3.ygl.codemuseum.activity.useractivity.SigninActivity;
+
+import static cn.atd3.ygl.codemuseum.service.BeatService.beattoken;
 
 /**
  * Created by YGL on 2017/2/22.
@@ -22,6 +38,10 @@ import cn.atd3.ygl.codemuseum.activity.useractivity.SigninActivity;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private RelativeLayout noLoginNavLayout;
+    private LinearLayout loginedNavLayout;
+    private Button login_or_reg;
+    private TextView username;
     @Override
     protected void onCreate(Bundle sls){
         super.onCreate(sls);
@@ -40,15 +60,20 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         View view=navigationView.getHeaderView(0);
-        Button login_or_reg=(Button)view.findViewById(cn.atd3.ygl.codemuseum.R.id.login_or_register);
+        noLoginNavLayout=(RelativeLayout)view.findViewById(R.id.noLoginNavLayout);
+        loginedNavLayout=(LinearLayout)view.findViewById(R.id.loginedNavLayout);
+        loginedNavLayout.setVisibility(View.INVISIBLE);
+        login_or_reg=(Button)view.findViewById(cn.atd3.ygl.codemuseum.R.id.login_or_register);
         login_or_reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(MainActivity.this,SigninActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
+        username=(TextView)view.findViewById(R.id.username);
     }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -81,5 +106,38 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    noLoginNavLayout.setVisibility(View.INVISIBLE);
+                    loginedNavLayout.setVisibility(View.VISIBLE);
+                    String string=data.getStringExtra("information");
+                    setUserName(string);
+                }
+                break;
+            default:
+        }
+    }
+
+    private void setUserName(String string){
+        Log.i("xxx",string);
+        String userName="";
+        try{
+            JSONObject jsonObject=new JSONObject(string);
+            jsonObject=jsonObject.getJSONObject("return");
+            Iterator iterator = jsonObject.keys();
+            while (iterator.hasNext()){
+                String key=(String) iterator.next();
+                jsonObject=jsonObject.getJSONObject(key);
+                userName=jsonObject.getString("name");
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        username.setText(userName);
     }
 }
