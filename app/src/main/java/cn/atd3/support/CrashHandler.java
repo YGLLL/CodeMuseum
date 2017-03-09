@@ -32,7 +32,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private static CrashHandler instance = new CrashHandler();
     private Thread.UncaughtExceptionHandler handler;
     private Context context;
-    ;
     private Map<String, String> infos = new HashMap<String, String>();
     @SuppressLint("SimpleDateFormat")
     private DateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");

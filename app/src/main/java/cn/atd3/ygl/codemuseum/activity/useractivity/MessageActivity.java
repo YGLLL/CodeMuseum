@@ -1,121 +1,93 @@
 package cn.atd3.ygl.codemuseum.activity.useractivity;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.model.UserMessage;
-import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
-import cn.atd3.ygl.codemuseum.util.HttpUtil;
-import cn.atd3.ygl.codemuseum.util.MessageAdapter;
+import cn.atd3.ygl.codemuseum.Adapter.MessageAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static cn.atd3.ygl.codemuseum.service.BeatService.beattoken;
 
 /**
  * Created by YGL on 2017/2/20.
  */
 
 public class MessageActivity extends AppCompatActivity{
-    private ListView listView;
-    private MessageAdapter messageAdapter;
-    private List<UserMessage> userMessageList=new ArrayList<UserMessage>();
+    private Button message;
+    private Button privateMessage;
+
+    private MessageFragment messageFragment=new MessageFragment();
+    private PrivateMessageFragment privateMessageFragment=new PrivateMessageFragment();
+    private Fragment showingFragment=null;
     @Override
     protected void onCreate(Bundle sls){
+        if(TextUtils.isEmpty(beattoken)){//临时使用的判断登陆的方法
+            Intent intent=new Intent(this,SigninActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         super.onCreate(sls);
         setContentView(R.layout.messageactivity_layout);
 
-        listView=(ListView)findViewById(R.id.messagelist);
-        messageAdapter=new MessageAdapter(this,R.layout.item_messageadapter,userMessageList);
-        listView.setAdapter(messageAdapter);
+        message=(Button)findViewById(R.id.message);
+        privateMessage=(Button)findViewById(R.id.privatemessage);
 
-        test();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.add(R.id.framelayout, messageFragment);
+        transaction.commit();
+        showingFragment=messageFragment;
+        setButtonColor();
+
+        message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchFragment(privateMessageFragment,messageFragment);
+                setButtonColor();
+            }
+        });
+        privateMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchFragment(messageFragment,privateMessageFragment);
+                setButtonColor();
+            }
+        });
     }
 
-    private void test(){
-        for(int i=0;i<10;i++){
-            UserMessage userMessage=new UserMessage();
-            userMessage.setMessage_time("time"+i);
-            userMessage.setMessage_sender("sender"+i);
-            userMessage.setMessage_address("address"+i);
-            userMessage.setMessage_content("content"+i);
-            userMessageList.add(userMessage);
+    private void switchFragment(Fragment hideFragment,Fragment showFragment){
+        if(showingFragment!=showFragment){
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            if(showFragment.isAdded()){
+                transaction.hide(hideFragment).show(showFragment).commit();
+            }else {
+                transaction.hide(hideFragment).add(R.id.framelayout,showFragment).commit();
+            }
+            showingFragment=showFragment;
         }
-        messageAdapter.notifyDataSetChanged();
     }
 
-    /*************************
-    private void inboxmessage(){
-        String url=urlAddT(atdinbox);
-        String jsonstring="";
-        try{
-            JSONObject jsonObject=new JSONObject();
-            JSONObject user=new JSONObject();
-            user.put("user",beattoken);
-            jsonObject.put("token",user);
-
-            jsonstring=jsonObject.toString();
-        }catch (JSONException e){e.printStackTrace();}
-        Log.e("sendmessage()url",url);
-        Log.e("sendmessage()jsonstring",jsonstring);
-        HttpUtil.sendHttpRequest(url,jsonstring, new HttpCallbackListener() {
-            @Override
-            public void onFinish(String response) {
-                Log.e("inboxmessage()",getinbox(response));
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-        });
+    private void setButtonColor(){
+        if(showingFragment==messageFragment){
+            message.setBackgroundColor(Color.parseColor("#2E7D32"));
+            privateMessage.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        }else {
+            privateMessage.setBackgroundColor(Color.parseColor("#2E7D32"));
+            message.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        }
     }
-
-     //这样解析容易造成错误
-    private String getinbox(String response){
-        try {
-            JSONObject jsonObject=new JSONObject(response);
-            JSONArray returnstr=jsonObject.getJSONArray("return");
-            jsonObject=returnstr.getJSONObject(0);
-            response=jsonObject.getString("data");
-        }catch (JSONException e){e.printStackTrace();}
-        return  response;
-    }
-
-    private void sendmessage(){
-        String url=urlAddT(atdsendmassage);
-        String jsonstring="";
-        try{
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("message","回复我");
-            jsonObject.put("to",11);
-            jsonObject.put("type",5);
-
-            JSONObject user=new JSONObject();
-            user.put("user",beattoken);
-
-            jsonObject.put("token",user);
-
-            jsonstring=jsonObject.toString();
-        }catch (JSONException e){e.printStackTrace();}
-        HttpUtil.sendHttpRequest(url,jsonstring, new HttpCallbackListener() {
-            @Override
-            public void onFinish(String response) {
-                Log.e("sendmessage()",response);
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-        });
-    }
-    /********************************************/
 }

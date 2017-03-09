@@ -1,11 +1,13 @@
 package cn.atd3.support.api.v1;
 
-import android.os.Looper;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import cn.atd3.support.api.ServerException;
+
+import static cn.atd3.ygl.codemuseum.service.BeatService.beattoken;
 
 /**
  * Created by DXkite on 2017/3/1 0001.
@@ -206,7 +208,7 @@ public class User {
     }
 
     /*
-    查询用户信息
+    查询登陆用户信息
      */
     public static void getUserInformation(final String token,final ApiActions apiActions){
         new Thread(new Runnable() {
@@ -223,6 +225,86 @@ public class User {
                     if (jsonvalue.has("return")){
                         apiActions.getUserInformation(jsonvalue.toString());
                     }
+                }catch (ServerException e){
+                    apiActions.serverException(e);
+                }catch (JSONException e){
+                    apiActions.serverException(new ServerException("server response format exception", e));
+                }
+            }
+        }).start();
+    }
+
+    /*
+    查询用户公开信息
+     */
+    public static void getUserPublicInformation(final int[] uids,final ApiActions apiActions){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONArray jsonArray=new JSONArray();
+                    for(int i:uids){
+                        jsonArray.put(i);
+                    }
+
+                    JSONObject jsonvalue=new JSONObject();
+                    jsonvalue.put("uids",jsonArray);
+                    String get=ApiManager.action("user/publicinfo",jsonvalue);
+                    jsonvalue=new JSONObject(get);
+                    if (jsonvalue.has("return")){
+                        apiActions.getUserPublicInformation(jsonvalue.toString());
+                    }
+                }catch (ServerException e){
+                    apiActions.serverException(e);
+                }catch (JSONException e){
+                    apiActions.serverException(new ServerException("server response format exception", e));
+                }
+            }
+        }).start();
+    }
+
+    /*
+    发送私信
+     */
+    public static void sendMessage(final String message,final String uid,final ApiActions apiActions){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONObject jsonObject=new JSONObject();
+                    jsonObject.put("type",5);
+                    jsonObject.put("message",message);
+                    jsonObject.put("to",uid);
+
+                    JSONObject user=new JSONObject();
+                    user.put("user",beattoken);
+
+                    jsonObject.put("token",user);
+                    String get=ApiManager.action("msg/send",jsonObject);
+                    apiActions.sendMessage(get);
+                }catch (ServerException e){
+                    apiActions.serverException(e);
+                }catch (JSONException e){
+                    apiActions.serverException(new ServerException("server response format exception", e));
+                }
+            }
+        }).start();
+    }
+
+    /*
+    接收信息
+     */
+    public static void inboxmessage(final ApiActions apiActions){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONObject jsonObject=new JSONObject();
+                    JSONObject user=new JSONObject();
+                    user.put("user",beattoken);
+                    jsonObject.put("token",user);
+                    String get=ApiManager.action("msg/inbox",jsonObject);
+                    apiActions.inboxmessage(get);
                 }catch (ServerException e){
                     apiActions.serverException(e);
                 }catch (JSONException e){

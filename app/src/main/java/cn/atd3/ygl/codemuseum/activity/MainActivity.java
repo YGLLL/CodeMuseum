@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity
         username=(TextView)view.findViewById(R.id.username);
     }
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
