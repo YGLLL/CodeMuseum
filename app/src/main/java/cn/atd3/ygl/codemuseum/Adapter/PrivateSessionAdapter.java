@@ -1,7 +1,6 @@
 package cn.atd3.ygl.codemuseum.Adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,22 +11,22 @@ import android.widget.TextView;
 import java.util.List;
 
 import cn.atd3.ygl.codemuseum.R;
-import cn.atd3.ygl.codemuseum.model.UserPrivateMessage;
+import cn.atd3.ygl.codemuseum.model.PrivateSession;
 
 /**
  * Created by YGL on 2017/3/9.
  */
 
-public class PrivateMessageAdapter extends ArrayAdapter<UserPrivateMessage> {
+public class PrivateSessionAdapter extends ArrayAdapter<PrivateSession> {
     private int layoutId;
-    public PrivateMessageAdapter(Context context, int layoutId, List<UserPrivateMessage> list){
+    public PrivateSessionAdapter(Context context, int layoutId, List<PrivateSession> list){
         super(context,layoutId,list);
         this.layoutId=layoutId;
     }
 
     @Override
     public View getView(int position,View convertView,ViewGroup parent){
-        UserPrivateMessage userPrivateMessage=getItem(position);
+        PrivateSession privateSession =getItem(position);
         View view;
         ViewUtil vu;
         if(convertView==null){
@@ -41,9 +40,9 @@ public class PrivateMessageAdapter extends ArrayAdapter<UserPrivateMessage> {
             view=convertView;
             vu=(ViewUtil)view.getTag();
         }
-        vu.userLogo.setImageBitmap(userPrivateMessage.getUserLogo());
-        vu.userName.setText(userPrivateMessage.getUserName());
-        vu.messageQuantity.setText(userPrivateMessage.getMessageQuantity());
+        vu.userLogo.setImageBitmap(privateSession.getUserLogo());
+        vu.userName.setText(privateSession.getUserName());
+        vu.messageQuantity.setText(privateSession.getMessageQuantity());
         return view;
     }
     class ViewUtil{

@@ -7,7 +7,7 @@ import android.widget.ImageView;
  * Created by YGL on 2017/3/9.
  */
 
-public class UserPrivateMessage {
+public class PrivateSession {
     private Bitmap userLogo;
     private String userName;
     private String messageQuantity;

@@ -31,5 +31,6 @@
         <activity android:name=".activity.useractivity.SettingActivity" />
         <activity android:name=".activity.useractivity.MessageActivity" />
         <service android:name=".service.BeatService"></service>
+        <activity android:name=".activity.useractivity.SessionWindow"/>
     </application>
 </manifest>

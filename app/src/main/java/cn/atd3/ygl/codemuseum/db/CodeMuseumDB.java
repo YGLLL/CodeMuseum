@@ -17,7 +17,7 @@ import java.util.List;
 public class CodeMuseumDB {
     //封装数据库
     public static final String DB_NAME="code_museum";
-    public static final int DB_VERSION=1;
+    public static final int DB_VERSION=2;//2017.3.10更新数据库
     private static CodeMuseumDB codeMuseumDB;
     private SQLiteDatabase db;
 
@@ -39,7 +39,7 @@ public class CodeMuseumDB {
             ContentValues values=new ContentValues();
             values.put("message_time",usermessage.getMessage_time());
             values.put("message_sender",usermessage.getMessage_sender());
-            values.put("message_address",usermessage.getMessage_address());
+            values.put("message_paper",usermessage.getMessage_paper());
             values.put("message_content",usermessage.getMessage_content());
             db.insert("message",null,values);
         }
@@ -52,7 +52,7 @@ public class CodeMuseumDB {
             do{
                 UserMessage userMessage=new UserMessage();
                 userMessage.setMessage_time(cursor.getString(cursor.getColumnIndex("message_time")));
-                userMessage.setMessage_address(cursor.getString(cursor.getColumnIndex("message_address")));
+                userMessage.setMessage_paper(cursor.getString(cursor.getColumnIndex("message_paper")));
                 userMessage.setMessage_sender(cursor.getString(cursor.getColumnIndex("message_sender")));
                 userMessage.setMessage_content(cursor.getString(cursor.getColumnIndex("message_content")));
                 userMessageList.add(userMessage);

@@ -42,12 +42,13 @@ public class MainActivity extends AppCompatActivity
     private LinearLayout loginedNavLayout;
     private Button login_or_reg;
     private TextView username;
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle sls){
         super.onCreate(sls);
         setContentView(cn.atd3.ygl.codemuseum.R.layout.mainactivity_layout);
 
-        Toolbar toolbar = (Toolbar) findViewById(cn.atd3.ygl.codemuseum.R.id.toolbar);
+        toolbar = (Toolbar) findViewById(cn.atd3.ygl.codemuseum.R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(cn.atd3.ygl.codemuseum.R.id.drawerlayout);

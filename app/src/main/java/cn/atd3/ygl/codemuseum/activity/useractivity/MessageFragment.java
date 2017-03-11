@@ -45,7 +45,7 @@ public class MessageFragment extends Fragment {
             UserMessage userMessage=new UserMessage();
             userMessage.setMessage_time("time"+i);
             userMessage.setMessage_sender("sender"+i);
-            userMessage.setMessage_address("address"+i);
+            userMessage.setMessage_paper("paper"+i);
             userMessage.setMessage_content("content"+i);
             userMessageList.add(userMessage);
         }
