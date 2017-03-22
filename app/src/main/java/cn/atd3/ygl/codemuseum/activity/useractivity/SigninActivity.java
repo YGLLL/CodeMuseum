@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,17 +18,21 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.Date;
+import java.util.Iterator;
+
 import cn.atd3.support.api.ServerException;
 import cn.atd3.support.api.v1.ApiActions;
 import cn.atd3.support.api.v1.User;
 import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.activity.MainActivity;
+import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
 import cn.atd3.ygl.codemuseum.service.BeatService;
 import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
 import cn.atd3.ygl.codemuseum.util.HttpPictureCallbackListener;
 import cn.atd3.ygl.codemuseum.util.HttpUtil;
+import cn.atd3.ygl.codemuseum.util.Utility;
 
-import static cn.atd3.ygl.codemuseum.service.BeatService.beattoken;
+import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
 
 /**
  * Created by YGL on 2017/2/20.
@@ -60,9 +65,9 @@ public class SigninActivity extends AppCompatActivity{
         checkcode=(EditText)findViewById(R.id.checkcode);
         checkcodepicture=(ImageView)findViewById(R.id.checkcodepicture);
         refreshcheckcode=(Button)findViewById(R.id.refreshcheckcode);
-        checkcodelayout=(RelativeLayout)findViewById(R.id.checkcodelayout);
-        loginButton=(Button)findViewById(R.id.login_button);
         goto_signupactivity=(Button)findViewById(R.id.goto_signupactivity);
+        loginButton=(Button)findViewById(R.id.login_button);
+        checkcodelayout=(RelativeLayout)findViewById(R.id.checkcodelayout);
         //隐藏验证码相关控件
         checkcodelayout.setVisibility(View.INVISIBLE);
 
@@ -201,9 +206,9 @@ public class SigninActivity extends AppCompatActivity{
             public void userSignIn(boolean success,String message){
                 closeProgressDialog();//关闭等待动画
                 if(success){
-                    beattoken=message;
-                    Intent intent=new Intent(SigninActivity.this, BeatService.class);
-                    startService(intent);
+                    CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(SigninActivity.this);
+                    codeMuseumDB.saveToken(message);
+                    BEATTOKEN=message;
                     getInfo();//查询用户信息
                 }else {
                     if(message.equals("codeerror")){
@@ -224,12 +229,27 @@ public class SigninActivity extends AppCompatActivity{
 
     //查询用户信息
     private void getInfo(){
-        User.getUserInformation(beattoken, new ApiActions() {
+        User.getUserInformation(BEATTOKEN, new ApiActions() {
             @Override
             public void getUserInformation(String information){
-                Intent mainintent=new Intent();
-                mainintent.putExtra("information",information);
-                setResult(RESULT_OK,mainintent);
+                String userName="";
+                try{
+                    JSONObject jsonObject=new JSONObject(information);
+                    jsonObject=jsonObject.getJSONObject("return");
+                    Iterator iterator = jsonObject.keys();
+                    while (iterator.hasNext()){
+                        String key=(String) iterator.next();
+                        jsonObject=jsonObject.getJSONObject(key);
+                        userName=jsonObject.getString("name");
+                    }
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+                Utility.saveUserInfo(SigninActivity.this,"signedin",true);
+                Utility.saveUserInfo(SigninActivity.this,"username",userName);
+
+                Intent mainintent=new Intent(SigninActivity.this,MainActivity.class);
+                startActivity(mainintent);
                 toastPrintf("登陆成功");
                 finish();
             }

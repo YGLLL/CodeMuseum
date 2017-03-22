@@ -17,7 +17,7 @@ import java.util.List;
 public class CodeMuseumDB {
     //封装数据库
     public static final String DB_NAME="code_museum";
-    public static final int DB_VERSION=2;//2017.3.10更新数据库
+    public static final int DB_VERSION=3;//2017.3.22更新数据库
     private static CodeMuseumDB codeMuseumDB;
     private SQLiteDatabase db;
 
@@ -59,5 +59,18 @@ public class CodeMuseumDB {
             }while (cursor.moveToNext());
         }
         return userMessageList;
+    }
+
+    public void saveToken(String token){
+        ContentValues contentValues=new ContentValues();
+        contentValues.put("beat_token",token);
+        db.insert("beattoken",null,contentValues);
+    }
+    public String readToken(){
+        Cursor cursor=db.query("beattoken",null,null,null,null,null,null);
+        if (cursor.moveToFirst()){
+            return cursor.getString(cursor.getColumnIndex("beat_token"));
+        }
+        return null;
     }
 }

@@ -11,6 +11,7 @@ public class PrivateSession {
     private Bitmap userLogo;
     private String userName;
     private String messageQuantity;
+    private int uid;
 
     public Bitmap getUserLogo() {
         return userLogo;
@@ -21,6 +22,9 @@ public class PrivateSession {
     public String getMessageQuantity() {
         return messageQuantity;
     }
+    public int getUid() {
+        return uid;
+    }
 
     public void setUserLogo(Bitmap userLogo) {
         this.userLogo = userLogo;
@@ -30,5 +34,8 @@ public class PrivateSession {
     }
     public void setMessageQuantity(String messageQuantity) {
         this.messageQuantity = messageQuantity;
+    }
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 }

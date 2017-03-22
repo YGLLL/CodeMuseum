@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp">
 
     <ImageView
         android:id="@+id/userlogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"/>
     <TextView
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/userlogo"
+        android:textColor="@color/black"
+        android:textSize="18sp"/>
     <TextView
         android:id="@+id/messageQuantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-</LinearLayout>
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:textSize="18sp"/>
+</RelativeLayout>

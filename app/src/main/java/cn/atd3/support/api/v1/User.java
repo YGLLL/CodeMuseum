@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import cn.atd3.support.api.ServerException;
 
-import static cn.atd3.ygl.codemuseum.service.BeatService.beattoken;
+import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
 
 /**
  * Created by DXkite on 2017/3/1 0001.
@@ -266,7 +266,7 @@ public class User {
     /*
     发送私信
      */
-    public static void sendMessage(final String message,final String uid,final ApiActions apiActions){
+    public static void sendMessage(final String message,final int uid,final ApiActions apiActions){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -277,9 +277,10 @@ public class User {
                     jsonObject.put("to",uid);
 
                     JSONObject user=new JSONObject();
-                    user.put("user",beattoken);
+                    user.put("user",BEATTOKEN);
 
                     jsonObject.put("token",user);
+                    Log.i("xxx",jsonObject.toString());
                     String get=ApiManager.action("msg/send",jsonObject);
                     apiActions.sendMessage(get);
                 }catch (ServerException e){
@@ -301,7 +302,7 @@ public class User {
                 try {
                     JSONObject jsonObject=new JSONObject();
                     JSONObject user=new JSONObject();
-                    user.put("user",beattoken);
+                    user.put("user",BEATTOKEN);
                     jsonObject.put("token",user);
                     String get=ApiManager.action("msg/inbox",jsonObject);
                     apiActions.inboxmessage(get);

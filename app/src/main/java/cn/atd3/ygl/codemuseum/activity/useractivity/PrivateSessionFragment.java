@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,18 +45,24 @@ public class PrivateSessionFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long rowId) {
                 Intent intent=new Intent(getActivity(),SessionWindow.class);
+                intent.putExtra("UserName",list.get(position).getUserName());
+                intent.putExtra("Uid",list.get(position).getUid());
                 startActivity(intent);
             }
         });
     }
     private void test(){
-        for(int i=0;i<15;i++){
-            PrivateSession privateSession =new PrivateSession();
-            privateSession.setUserLogo(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
-            privateSession.setUserName("userName"+i);
-            privateSession.setMessageQuantity(String.valueOf(i));
-            list.add(privateSession);
-        }
+        list.clear();
+        PrivateSession message=new PrivateSession();
+        message.setUserLogo(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
+        message.setUserName("message");
+        message.setUid(40);
+        list.add(message);
+        PrivateSession yangguoliang=new PrivateSession();
+        yangguoliang.setUserLogo(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
+        yangguoliang.setUserName("yangguoliang");
+        yangguoliang.setUid(10);
+        list.add(yangguoliang);
         privateSessionAdapter.notifyDataSetChanged();
     }
 }

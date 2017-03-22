@@ -20,6 +20,7 @@ public class CodeMuseumOpenHelper extends SQLiteOpenHelper {
             "message_content text," +
             "message_paper text," +
             "message_type)";
+    public static final String SQLBEATTOKEN="create table beattoken(beat_token text)";
 
     public CodeMuseumOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version){
         super(context,name,factory,version);
@@ -27,6 +28,7 @@ public class CodeMuseumOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db){
         db.execSQL(MESSAGE);// 创建用户消息表
+        db.execSQL(SQLBEATTOKEN);//创建用户信息表
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
