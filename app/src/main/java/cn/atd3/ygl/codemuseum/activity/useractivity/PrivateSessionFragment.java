@@ -54,12 +54,12 @@ public class PrivateSessionFragment extends Fragment {
     private void test(){
         list.clear();
         PrivateSession message=new PrivateSession();
-        message.setUserLogo(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
+        message.setUserLogo(BitmapFactory.decodeResource(getResources(), R.drawable.logopng));
         message.setUserName("message");
         message.setUid(40);
         list.add(message);
         PrivateSession yangguoliang=new PrivateSession();
-        yangguoliang.setUserLogo(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
+        yangguoliang.setUserLogo(BitmapFactory.decodeResource(getResources(), R.drawable.logopng));
         yangguoliang.setUserName("yangguoliang");
         yangguoliang.setUid(10);
         list.add(yangguoliang);

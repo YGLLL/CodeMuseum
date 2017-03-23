@@ -206,8 +206,6 @@ public class SigninActivity extends AppCompatActivity{
             public void userSignIn(boolean success,String message){
                 closeProgressDialog();//关闭等待动画
                 if(success){
-                    CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(SigninActivity.this);
-                    codeMuseumDB.saveToken(message);
                     BEATTOKEN=message;
                     getInfo();//查询用户信息
                 }else {
@@ -232,6 +230,7 @@ public class SigninActivity extends AppCompatActivity{
         User.getUserInformation(BEATTOKEN, new ApiActions() {
             @Override
             public void getUserInformation(String information){
+                int uid=-1;
                 String userName="";
                 try{
                     JSONObject jsonObject=new JSONObject(information);
@@ -240,18 +239,21 @@ public class SigninActivity extends AppCompatActivity{
                     while (iterator.hasNext()){
                         String key=(String) iterator.next();
                         jsonObject=jsonObject.getJSONObject(key);
+                        uid=jsonObject.getInt("id");
                         userName=jsonObject.getString("name");
                     }
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
-                Utility.saveUserInfo(SigninActivity.this,"signedin",true);
-                Utility.saveUserInfo(SigninActivity.this,"username",userName);
+                if((uid>-1)&&(!TextUtils.isEmpty(userName))){
+                    CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(SigninActivity.this);
+                    codeMuseumDB.saveUser(uid,userName,userPassword.getText().toString(),BEATTOKEN);
 
-                Intent mainintent=new Intent(SigninActivity.this,MainActivity.class);
-                startActivity(mainintent);
-                toastPrintf("登陆成功");
-                finish();
+                    Intent mainintent=new Intent(SigninActivity.this,MainActivity.class);
+                    startActivity(mainintent);
+                    toastPrintf("登陆成功");
+                    finish();
+                }
             }
             @Override
             public void serverException(ServerException e) {

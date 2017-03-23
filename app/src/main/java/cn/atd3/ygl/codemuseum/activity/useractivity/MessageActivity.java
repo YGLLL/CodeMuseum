@@ -14,6 +14,9 @@ import android.widget.Button;
 
 import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
+import cn.atd3.ygl.codemuseum.util.Utility;
+
+import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
 
 /**
  * Created by YGL on 2017/2/20.
@@ -26,10 +29,10 @@ public class MessageActivity extends AppCompatActivity{
     private MessageFragment messageFragment=new MessageFragment();
     private PrivateSessionFragment privateSessionFragment =new PrivateSessionFragment();
     private Fragment showingFragment=null;
-    private SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(MessageActivity.this);
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle sls){
-        if(sharedPreferences.getBoolean("signedin",false)){
+        if(!Utility.IsSignedIn(MessageActivity.this)){
             Intent intent=new Intent(this,SigninActivity.class);
             startActivity(intent);
             finish();

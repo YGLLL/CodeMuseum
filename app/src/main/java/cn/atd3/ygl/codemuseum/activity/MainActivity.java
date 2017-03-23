@@ -38,6 +38,8 @@ import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
 import cn.atd3.ygl.codemuseum.service.BeatService;
 import cn.atd3.ygl.codemuseum.util.Utility;
 
+import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
+
 /**
  * Created by YGL on 2017/2/22.
  */
@@ -50,14 +52,10 @@ public class MainActivity extends AppCompatActivity
     private TextView username;
     private Toolbar toolbar;
     private DrawerLayout drawer;
-
-    //private CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(MainActivity.this);
     @Override
     protected void onCreate(Bundle sls){
         super.onCreate(sls);
         setContentView(cn.atd3.ygl.codemuseum.R.layout.mainactivity_layout);
-
-        //Log.i("xxx","xxx");
 
         toolbar = (Toolbar) findViewById(cn.atd3.ygl.codemuseum.R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -85,7 +83,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        IsSignedIn();
+        IfSignedIn();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -122,15 +120,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart(){
         super.onStart();
-        IsSignedIn();
+        IfSignedIn();
     }
 
-    private void IsSignedIn(){
-        SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(this);
-        if(sharedPreferences.getBoolean("signedin",false)){
+    private void IfSignedIn(){
+        if(Utility.IsSignedIn(MainActivity.this)){
             noLoginNavLayout.setVisibility(View.INVISIBLE);
             loginedNavLayout.setVisibility(View.VISIBLE);
-            username.setText(sharedPreferences.getString("username","error"));
+            CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(MainActivity.this);
+            username.setText(codeMuseumDB.readUserName());
             Intent intent=new Intent(MainActivity.this, BeatService.class);
             startService(intent);
         }

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import cn.atd3.ygl.codemuseum.model.UserMessage;
 
@@ -61,16 +62,33 @@ public class CodeMuseumDB {
         return userMessageList;
     }
 
-    public void saveToken(String token){
+    public void saveUser(int uid,String name,String pwd,String beat_token){
+        ContentValues contentValues=new ContentValues();
+        contentValues.put("uid",uid);
+        contentValues.put("name",name);
+        contentValues.put("pwd",pwd);
+        contentValues.put("beat_token",beat_token);
+        db.insert("user",null,contentValues);
+    }
+    public void updateToken(String token){
         ContentValues contentValues=new ContentValues();
         contentValues.put("beat_token",token);
-        db.insert("beattoken",null,contentValues);
+        db.update("user",contentValues,null,null);
     }
     public String readToken(){
-        Cursor cursor=db.query("beattoken",null,null,null,null,null,null);
+        Cursor cursor=db.query("user",null,null,null,null,null,null);
         if (cursor.moveToFirst()){
             return cursor.getString(cursor.getColumnIndex("beat_token"));
+        }else {
+            return null;
         }
-        return null;
+    }
+    public String readUserName(){
+        Cursor cursor=db.query("user",null,null,null,null,null,null);
+        if(cursor.moveToFirst()){
+            return cursor.getString(cursor.getColumnIndex("name"));
+        }else {
+            return null;
+        }
     }
 }

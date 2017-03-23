@@ -280,7 +280,6 @@ public class User {
                     user.put("user",BEATTOKEN);
 
                     jsonObject.put("token",user);
-                    Log.i("xxx",jsonObject.toString());
                     String get=ApiManager.action("msg/send",jsonObject);
                     apiActions.sendMessage(get);
                 }catch (ServerException e){

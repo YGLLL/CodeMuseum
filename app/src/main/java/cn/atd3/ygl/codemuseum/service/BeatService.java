@@ -20,7 +20,7 @@ import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
  */
 public class BeatService extends Service{
     public static String BEATTOKEN="";
-    private CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(BeatService.this);
+    private CodeMuseumDB codeMuseumDB;
 
     @Override
     public IBinder onBind(Intent intent){
@@ -28,16 +28,21 @@ public class BeatService extends Service{
     }
 
     @Override
+    public void onCreate(){
+        codeMuseumDB=CodeMuseumDB.getInstance(BeatService.this);
+        BEATTOKEN=codeMuseumDB.readToken();
+    }
+
+    @Override
     public int onStartCommand(Intent intent,int flags,int startId){
         Runnable runnable=new Runnable() {
             @Override
             public void run() {
-                BEATTOKEN=codeMuseumDB.readToken();
                 User.beatHeart(BEATTOKEN, new ApiActions() {
                     @Override
                     public void beatHeart(String nextToken){
                         BEATTOKEN=nextToken;
-                        codeMuseumDB.saveToken(nextToken);
+                        codeMuseumDB.updateToken(nextToken);
                     }
                     @Override
                     public void serverException(ServerException e) {
