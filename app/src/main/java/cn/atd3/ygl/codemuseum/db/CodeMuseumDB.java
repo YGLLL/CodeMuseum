@@ -18,7 +18,7 @@ import java.util.List;
 public class CodeMuseumDB {
     //封装数据库
     public static final String DB_NAME="code_museum";
-    public static final int DB_VERSION=3;//2017.3.22更新数据库
+    public static final int DB_VERSION=4;//2017.3.24更新数据库
     private static CodeMuseumDB codeMuseumDB;
     private SQLiteDatabase db;
 
