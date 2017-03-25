@@ -43,11 +43,10 @@ import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
 /**
  * Created by YGL on 2017/2/22.
  */
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private RelativeLayout noLoginNavLayout;
-    private LinearLayout loginedNavLayout;
+    private RelativeLayout loginedNavLayout;
     private Button login_or_reg;
     private TextView username;
     private Toolbar toolbar;
@@ -71,7 +70,7 @@ public class MainActivity extends AppCompatActivity
         View view=navigationView.getHeaderView(0);
         username=(TextView)view.findViewById(R.id.username);
         noLoginNavLayout=(RelativeLayout)view.findViewById(R.id.noLoginNavLayout);
-        loginedNavLayout=(LinearLayout)view.findViewById(R.id.loginedNavLayout);
+        loginedNavLayout=(RelativeLayout) view.findViewById(R.id.loginedNavLayout);
         loginedNavLayout.setVisibility(View.INVISIBLE);
         login_or_reg=(Button)view.findViewById(cn.atd3.ygl.codemuseum.R.id.login_or_register);
         login_or_reg.setOnClickListener(new View.OnClickListener() {
