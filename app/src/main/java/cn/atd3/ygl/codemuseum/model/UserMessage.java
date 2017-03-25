@@ -7,7 +7,7 @@ package cn.atd3.ygl.codemuseum.model;
 public class UserMessage {
     private String message_time;
     private String message_sender;
-    private String message_address;
+    private String message_paper;
     private String message_content;
 
     public String getMessage_time() {
@@ -16,8 +16,8 @@ public class UserMessage {
     public String getMessage_sender() {
         return message_sender;
     }
-    public String getMessage_address() {
-        return message_address;
+    public String getMessage_paper() {
+        return message_paper;
     }
     public String getMessage_content() {
         return message_content;
@@ -31,8 +31,8 @@ public class UserMessage {
         this.message_sender = message_sender;
     }
 
-    public void setMessage_address(String message_address) {
-        this.message_address = message_address;
+    public void setMessage_paper(String message_address) {
+        this.message_paper = message_address;
     }
 
     public void setMessage_content(String message_content) {

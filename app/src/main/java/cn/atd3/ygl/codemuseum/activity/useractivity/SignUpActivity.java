@@ -18,6 +18,7 @@ import cn.atd3.support.api.ServerException;
 import cn.atd3.support.api.v1.ApiActions;
 import cn.atd3.support.api.v1.User;
 import cn.atd3.ygl.codemuseum.activity.MainActivity;
+import cn.atd3.ygl.codemuseum.activity.SuperActivity;
 import cn.atd3.ygl.codemuseum.service.BeatService;
 import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
 import cn.atd3.ygl.codemuseum.util.HttpPictureCallbackListener;
@@ -32,7 +33,7 @@ import java.util.regex.Pattern;
  * Created by YGL on 2017/2/20.
  */
 
-public class SignUpActivity extends AppCompatActivity{
+public class SignUpActivity extends SuperActivity{
 
     private EditText signup_userid;
     private EditText signup_userpassword1;

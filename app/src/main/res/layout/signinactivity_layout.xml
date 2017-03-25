@@ -9,10 +9,10 @@
     android:paddingTop="16dp">
     <ImageView
         android:id="@+id/applogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerHorizontal="true"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@drawable/logo" />
 
     <EditText
         android:id="@+id/userid"
@@ -40,10 +40,11 @@
         android:layout_height="wrap_content"
         android:gravity="left|top"
         android:text="忘记密码？"
-        android:textColor="@color/cornflowerblue"
+        android:textColor="@color/colorAccent"
         android:background="#00000000"
         android:layout_below="@id/userpassword"
-        android:layout_alignLeft="@id/userpassword"/>
+        android:layout_alignLeft="@id/userpassword"
+        android:layout_marginLeft="5dp"/>
 
     <RelativeLayout
         android:id="@+id/checkcodelayout"
@@ -82,7 +83,7 @@
         android:layout_centerHorizontal="true"
         android:text="登陆"
         android:textColor="@color/white"
-        android:background="@color/cornflowerblue"
+        android:background="@color/colorAccent"
         android:layout_below="@id/checkcodelayout"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"/>
@@ -93,7 +94,7 @@
         android:layout_height="wrap_content"
         android:gravity="bottom|left"
         android:text="没有帐号？去注册！"
-        android:textColor="@color/cornflowerblue"
+        android:textColor="@color/colorAccent"
         android:background="#00000000"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true" />

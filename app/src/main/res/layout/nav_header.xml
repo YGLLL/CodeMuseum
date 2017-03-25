@@ -17,28 +17,29 @@
             android:textColor="@color/white"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:background="#2E7D32"/>
+            android:background="@color/colorAccent"/>
     </RelativeLayout>
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/loginedNavLayout"
-        android:orientation="vertical"
-        android:gravity="bottom"
         android:paddingBottom="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="16dp">
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/userlogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher"/>
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/logo"/>
 
         <TextView
             android:id="@+id/username"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"/>
-    </LinearLayout>
+            android:textSize="20sp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/userlogo"/>
+    </RelativeLayout>
 </RelativeLayout>

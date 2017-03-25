@@ -11,16 +11,16 @@ import java.util.concurrent.TimeUnit;
 import cn.atd3.support.api.ServerException;
 import cn.atd3.support.api.v1.ApiActions;
 import cn.atd3.support.api.v1.User;
+import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
+
 /**
  * Created by YGL on 2017/2/27.
  * 心跳包发送服务
  *
  */
 public class BeatService extends Service{
-    final  String TAG="BeatServer";
-
-    // TODO：心跳包Token用数据库或者文件存储
-    public static String beattoken="";
+    public static String BEATTOKEN="";
+    private CodeMuseumDB codeMuseumDB;
 
     @Override
     public IBinder onBind(Intent intent){
@@ -28,14 +28,21 @@ public class BeatService extends Service{
     }
 
     @Override
+    public void onCreate(){
+        codeMuseumDB=CodeMuseumDB.getInstance(BeatService.this);
+        BEATTOKEN=codeMuseumDB.readToken();
+    }
+
+    @Override
     public int onStartCommand(Intent intent,int flags,int startId){
         Runnable runnable=new Runnable() {
             @Override
             public void run() {
-                User.beatHeart(beattoken, new ApiActions() {
+                User.beatHeart(BEATTOKEN, new ApiActions() {
                     @Override
                     public void beatHeart(String nextToken){
-                        beattoken=nextToken;
+                        BEATTOKEN=nextToken;
+                        codeMuseumDB.updateToken(nextToken);
                     }
                     @Override
                     public void serverException(ServerException e) {
