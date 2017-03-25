@@ -25,6 +25,7 @@ import cn.atd3.support.api.v1.ApiActions;
 import cn.atd3.support.api.v1.User;
 import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.activity.MainActivity;
+import cn.atd3.ygl.codemuseum.activity.SuperActivity;
 import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
 import cn.atd3.ygl.codemuseum.service.BeatService;
 import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
@@ -38,7 +39,7 @@ import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
  * Created by YGL on 2017/2/20.
  */
 
-public class SigninActivity extends AppCompatActivity{
+public class SigninActivity extends SuperActivity{
 
     private EditText userId;
     private EditText userPassword;

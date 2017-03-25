@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="用户名可使用任意字母 数字 下划线和中文,限制长度4-13"
-        android:layout_marginLeft="32dp"
+        android:layout_marginLeft="40dp"
         android:layout_marginRight="32dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/signup_userid"/>
@@ -70,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="输入邮箱可以让我们为你提供优秀的服务"
-        android:layout_marginLeft="32dp"
+        android:layout_marginLeft="40dp"
         android:layout_marginRight="32dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/signup_email"/>
@@ -112,7 +112,7 @@
         android:layout_centerHorizontal="true"
         android:text="注册"
         android:textColor="@color/white"
-        android:background="@color/cornflowerblue"
+        android:background="@color/colorAccent"
         android:layout_below="@id/signup_checkcodelayout"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"/>

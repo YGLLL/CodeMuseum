@@ -12,12 +12,13 @@ import cn.atd3.support.api.ServerException;
 import cn.atd3.support.api.v1.ApiActions;
 import cn.atd3.support.api.v1.User;
 import cn.atd3.ygl.codemuseum.R;
+import cn.atd3.ygl.codemuseum.activity.SuperActivity;
 
 /**
  * Created by YGL on 2017/3/11.
  */
 
-public class SessionWindow extends AppCompatActivity {
+public class SessionWindow extends SuperActivity {
     private ActionBar actionBar;
     private EditText sendmessage;
     private Button send;
