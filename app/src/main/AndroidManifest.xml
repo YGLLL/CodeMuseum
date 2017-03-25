@@ -20,7 +20,8 @@
             />
     <activity
         android:name=".activity.MainActivity"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme.NoActionBar"
+        android:launchMode="singleTask">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
@@ -31,5 +32,6 @@
         <activity android:name=".activity.useractivity.SettingActivity" />
         <activity android:name=".activity.useractivity.MessageActivity" />
         <service android:name=".service.BeatService"></service>
+        <activity android:name=".activity.useractivity.SessionWindow"/>
     </application>
 </manifest>

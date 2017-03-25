@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import cn.atd3.ygl.codemuseum.model.UserMessage;
 
@@ -17,7 +18,8 @@ import java.util.List;
 public class CodeMuseumDB {
     //封装数据库
     public static final String DB_NAME="code_museum";
-    public static final int DB_VERSION=1;
+    public static final int DB_VERSION=4;//2017.3.24更新数据库
+  
     private static CodeMuseumDB codeMuseumDB;
     private SQLiteDatabase db;
 
@@ -39,7 +41,7 @@ public class CodeMuseumDB {
             ContentValues values=new ContentValues();
             values.put("message_time",usermessage.getMessage_time());
             values.put("message_sender",usermessage.getMessage_sender());
-            values.put("message_address",usermessage.getMessage_address());
+            values.put("message_paper",usermessage.getMessage_paper());
             values.put("message_content",usermessage.getMessage_content());
             db.insert("message",null,values);
         }
@@ -52,12 +54,42 @@ public class CodeMuseumDB {
             do{
                 UserMessage userMessage=new UserMessage();
                 userMessage.setMessage_time(cursor.getString(cursor.getColumnIndex("message_time")));
-                userMessage.setMessage_address(cursor.getString(cursor.getColumnIndex("message_address")));
+                userMessage.setMessage_paper(cursor.getString(cursor.getColumnIndex("message_paper")));
                 userMessage.setMessage_sender(cursor.getString(cursor.getColumnIndex("message_sender")));
                 userMessage.setMessage_content(cursor.getString(cursor.getColumnIndex("message_content")));
                 userMessageList.add(userMessage);
             }while (cursor.moveToNext());
         }
         return userMessageList;
+    }
+
+    public void saveUser(int uid,String name,String pwd,String beat_token){
+        ContentValues contentValues=new ContentValues();
+        contentValues.put("uid",uid);
+        contentValues.put("name",name);
+        contentValues.put("pwd",pwd);
+        contentValues.put("beat_token",beat_token);
+        db.insert("user",null,contentValues);
+    }
+    public void updateToken(String token){
+        ContentValues contentValues=new ContentValues();
+        contentValues.put("beat_token",token);
+        db.update("user",contentValues,null,null);
+    }
+    public String readToken(){
+        Cursor cursor=db.query("user",null,null,null,null,null,null);
+        if (cursor.moveToFirst()){
+            return cursor.getString(cursor.getColumnIndex("beat_token"));
+        }else {
+            return null;
+        }
+    }
+    public String readUserName(){
+        Cursor cursor=db.query("user",null,null,null,null,null,null);
+        if(cursor.moveToFirst()){
+            return cursor.getString(cursor.getColumnIndex("name"));
+        }else {
+            return null;
+        }
     }
 }

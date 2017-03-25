@@ -1,4 +1,4 @@
-package cn.atd3.ygl.codemuseum.util;
+package cn.atd3.ygl.codemuseum.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -42,7 +42,7 @@ public class MessageAdapter extends ArrayAdapter<UserMessage> {
         }
         vu.message_time.setText(userMessage.getMessage_time());
         vu.message_sender.setText(userMessage.getMessage_sender());
-        vu.message_address.setText(userMessage.getMessage_address());
+        vu.message_address.setText(userMessage.getMessage_paper());
         vu.message_content.setText(userMessage.getMessage_content());
         return view;
     }
