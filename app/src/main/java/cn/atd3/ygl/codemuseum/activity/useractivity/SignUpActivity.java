@@ -1,12 +1,9 @@
 package cn.atd3.ygl.codemuseum.activity.useractivity;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,13 +13,8 @@ import android.widget.Toast;
 
 import cn.atd3.support.api.ServerException;
 import cn.atd3.support.api.v1.ApiActions;
-import cn.atd3.support.api.v1.User;
-import cn.atd3.ygl.codemuseum.activity.MainActivity;
+import cn.atd3.support.api.v1.Apis;
 import cn.atd3.ygl.codemuseum.activity.SuperActivity;
-import cn.atd3.ygl.codemuseum.service.BeatService;
-import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
-import cn.atd3.ygl.codemuseum.util.HttpPictureCallbackListener;
-import cn.atd3.ygl.codemuseum.util.HttpUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,7 +87,7 @@ public class SignUpActivity extends SuperActivity{
 
     //查询是否需要验证码
     private void getcheckcode(){
-        User.checkSignUpNeedCode(new ApiActions() {
+        Apis.checkSignUpNeedCode(new ApiActions() {
             @Override
             public void checkSignUpNeedCode(boolean need){
                 if(need){
@@ -119,7 +111,7 @@ public class SignUpActivity extends SuperActivity{
 
     //获取验证码图片
     private void getcheckcodepicture(){
-        User.getCodePicture(new ApiActions() {
+        Apis.getCodePicture(new ApiActions() {
             @Override
             public void getCodePicture(final Bitmap bitmap){
                 runOnUiThread(new Runnable() {
@@ -205,7 +197,7 @@ public class SignUpActivity extends SuperActivity{
         }catch (JSONException e){
             e.printStackTrace();
         }
-        User.userSignUp(jsonString, new ApiActions() {
+        Apis.userSignUp(jsonString, new ApiActions() {
             @Override
             public void userSignUp(boolean success,String message){
                 closeProgressDialog();//关闭等待动画
@@ -233,7 +225,7 @@ public class SignUpActivity extends SuperActivity{
     }
     private void checknameoremail(final String key,final String value){
         if(key.equals("name")){
-            User.checkUserId(value, new ApiActions() {
+            Apis.checkUserId(value, new ApiActions() {
                 @Override
                 public void checkUserId(boolean have){
                     if(have){
@@ -249,7 +241,7 @@ public class SignUpActivity extends SuperActivity{
                 }
             });
         }else {
-            User.checkUserEmail(value, new ApiActions() {
+            Apis.checkUserEmail(value, new ApiActions() {
                 @Override
                 public void checkUserEmail(boolean have){
                     if(have){

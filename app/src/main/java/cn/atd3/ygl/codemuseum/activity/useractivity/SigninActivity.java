@@ -4,10 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,21 +14,16 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.util.Date;
+
 import java.util.Iterator;
 
 import cn.atd3.support.api.ServerException;
 import cn.atd3.support.api.v1.ApiActions;
-import cn.atd3.support.api.v1.User;
+import cn.atd3.support.api.v1.Apis;
 import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.activity.MainActivity;
 import cn.atd3.ygl.codemuseum.activity.SuperActivity;
 import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
-import cn.atd3.ygl.codemuseum.service.BeatService;
-import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
-import cn.atd3.ygl.codemuseum.util.HttpPictureCallbackListener;
-import cn.atd3.ygl.codemuseum.util.HttpUtil;
-import cn.atd3.ygl.codemuseum.util.Utility;
 
 import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
 
@@ -103,7 +95,7 @@ public class SigninActivity extends SuperActivity{
 
     //查询是否需要验证码
     private void getcheckcode(){
-        User.checkSignInNeedCode(new ApiActions() {
+        Apis.checkSignInNeedCode(new ApiActions() {
             @Override
             public void checkSignInNeedCode(boolean need){
                 if(need){
@@ -127,7 +119,7 @@ public class SigninActivity extends SuperActivity{
 
     //获取验证码图片
     private void getcheckcodepicture(){
-        User.getCodePicture(new ApiActions() {
+        Apis.getCodePicture(new ApiActions() {
             @Override
             public void getCodePicture(final Bitmap bitmap){
                 runOnUiThread(new Runnable() {
@@ -152,7 +144,7 @@ public class SigninActivity extends SuperActivity{
             toastPrintf("请输入用户名");
             return;
         }
-        User.checkUserId(value, new ApiActions() {
+        Apis.checkUserId(value, new ApiActions() {
             @Override
             public void checkUserId(boolean have){
                 if(have){
@@ -202,7 +194,7 @@ public class SigninActivity extends SuperActivity{
         }catch (JSONException e){
             e.printStackTrace();
         }
-        User.userSignIn(jsonString, new ApiActions() {
+        Apis.userSignIn(jsonString, new ApiActions() {
             @Override
             public void userSignIn(boolean success,String message){
                 closeProgressDialog();//关闭等待动画
@@ -228,7 +220,7 @@ public class SigninActivity extends SuperActivity{
 
     //查询用户信息
     private void getInfo(){
-        User.getUserInformation(BEATTOKEN, new ApiActions() {
+        Apis.getUserInformation(BEATTOKEN, new ApiActions() {
             @Override
             public void getUserInformation(String information){
                 int uid=-1;
@@ -248,7 +240,10 @@ public class SigninActivity extends SuperActivity{
                 }
                 if((uid>-1)&&(!TextUtils.isEmpty(userName))){
                     CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(SigninActivity.this);
-                    codeMuseumDB.saveUser(uid,userName,userPassword.getText().toString(),BEATTOKEN);
+                    codeMuseumDB.saveUser(CodeMuseumDB.UID,uid);
+                    codeMuseumDB.saveUser(CodeMuseumDB.NAME,userName);
+                    codeMuseumDB.saveUser(CodeMuseumDB.PWD,userPassword.getText().toString());
+                    codeMuseumDB.saveUser(CodeMuseumDB.BEAT_TOKEN,BEATTOKEN);
 
                     Intent mainintent=new Intent(SigninActivity.this,MainActivity.class);
                     startActivity(mainintent);

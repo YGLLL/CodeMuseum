@@ -142,7 +142,7 @@ public class ApiManager {
             // 压入客户端验证信息
             httpUrlConnection.setRequestProperty("API-Client",""+CLIENT_ID);
             httpUrlConnection.setRequestProperty("API-Token",CLIENT_TOKEN);
-            httpUrlConnection.setRequestProperty("User-Agent",TAG);
+            httpUrlConnection.setRequestProperty("Apis-Agent",TAG);
 
             // 连接服务器
             if (data==null){
@@ -190,7 +190,7 @@ public class ApiManager {
             // 压入客户端验证信息
             httpUrlConnection.setRequestProperty("API-Client",""+CLIENT_ID);
             httpUrlConnection.setRequestProperty("API-Token",CLIENT_TOKEN);
-            httpUrlConnection.setRequestProperty("User-Agent",TAG);
+            httpUrlConnection.setRequestProperty("Apis-Agent",TAG);
 
             // 连接服务器
             httpUrlConnection.setRequestMethod("GET");

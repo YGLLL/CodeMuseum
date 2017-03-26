@@ -18,10 +18,11 @@ public abstract class ApiActions {
     public void checkSignInNeedCode(boolean need){ Log.i(TAG,"checkSignInNeedCode"); }
     public void userSignUp(boolean success,String message){ Log.i(TAG,"userSignIn"); }
     public void userSignIn(boolean success,String message){ Log.i(TAG,"userSignIn"); }
-    public void beatHeart(String nextToken){Log.i(TAG,"beatHeart");}
+    public void beatHeart(String returnString){Log.i(TAG,"beatHeart");}
     public void getUserInformation(String information){Log.i(TAG,"getUserInformation");}
     public void getUserPublicInformation(String informations){Log.i(TAG,"getUserPublicInformation");}
     public void sendMessage(String string){Log.i(TAG,"sendMessage");}
     public void inboxmessage(String message){Log.i(TAG,"inboxmessage");}
+    public void checkemailcode(String message){Log.i(TAG,"checkemailcode");}
     abstract public void serverException(ServerException e);
 }

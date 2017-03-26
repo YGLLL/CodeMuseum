@@ -14,7 +14,7 @@ import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
  * Update by YGL on 2017/3/5
  * 用户API接口
  */
-public class User {
+public class Apis {
     /**
      * 检测注册是否需要验证码
      */
@@ -194,10 +194,8 @@ public class User {
                     JSONObject jsonvalue=new JSONObject();
                     jsonvalue.put("token",lastToken);
                     String get=ApiManager.action("user/beat",jsonvalue);
-                    JSONObject jsonObject=new JSONObject(get);
-                    if (jsonObject.has("return")){
-                        apiActions.beatHeart(jsonObject.getJSONObject("return").getString("token"));
-                    }
+                    apiActions.beatHeart(get);
+                    Log.i("xxx",get+"end");
                 }catch (ServerException e){
                     apiActions.serverException(e);
                 }catch (JSONException e){
@@ -305,6 +303,29 @@ public class User {
                     jsonObject.put("token",user);
                     String get=ApiManager.action("msg/inbox",jsonObject);
                     apiActions.inboxmessage(get);
+                }catch (ServerException e){
+                    apiActions.serverException(e);
+                }catch (JSONException e){
+                    apiActions.serverException(new ServerException("server response format exception", e));
+                }
+            }
+        }).start();
+    }
+
+    /*
+    提交邮箱验证码
+     */
+    public static void checkemailcode(final int emailcode,final ApiActions apiActions){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONObject jsonObject=new JSONObject();
+                    jsonObject.put("token",BEATTOKEN);
+                    jsonObject.put("value",emailcode);
+                    Log.i("xxx","commit:"+jsonObject.toString());
+                    String get=ApiManager.action("user/checkemailcode",jsonObject);
+                    apiActions.checkemailcode(get);
                 }catch (ServerException e){
                     apiActions.serverException(e);
                 }catch (JSONException e){

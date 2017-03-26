@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
+import cn.atd3.ygl.codemuseum.model.User;
 
 /**
  * Created by YGL on 2017/2/13.
@@ -19,12 +20,6 @@ import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
 
 public class Utility {
     //在这里解析JSON数据
-
-    /*******
-    public static String urlAddT(String url){
-        return url+"&t="+String.valueOf(new Date().getTime());
-    }
-     **************/
 
     public static void saveUserInfo(Context context,String key,String value){
         SharedPreferences.Editor editor= PreferenceManager.getDefaultSharedPreferences(context).edit();
@@ -44,7 +39,8 @@ public class Utility {
     //查询是否登陆
     public static Boolean IsSignedIn(Context context){
         CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(context);
-        if(TextUtils.isEmpty(codeMuseumDB.readToken())){
+        User user=codeMuseumDB.readUser();
+        if(TextUtils.isEmpty(user.getBeat_token())){
             return false;
         }else {
             return true;

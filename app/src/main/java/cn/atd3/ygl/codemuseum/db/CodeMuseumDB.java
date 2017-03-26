@@ -4,8 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
+import cn.atd3.support.api.v1.Apis;
+import cn.atd3.ygl.codemuseum.model.User;
 import cn.atd3.ygl.codemuseum.model.UserMessage;
 
 import java.util.ArrayList;
@@ -22,6 +23,11 @@ public class CodeMuseumDB {
   
     private static CodeMuseumDB codeMuseumDB;
     private SQLiteDatabase db;
+
+    public static final String UID="uid";
+    public static final String NAME="name";
+    public static final String PWD="pwd";
+    public static final String BEAT_TOKEN="beat_token";
 
     //将构造器隐藏，使用getInstance得到CodeMuseumDB对象，确保全局只有一个CodeMuseumDB对象
     private CodeMuseumDB(Context context){
@@ -63,33 +69,47 @@ public class CodeMuseumDB {
         return userMessageList;
     }
 
-    public void saveUser(int uid,String name,String pwd,String beat_token){
+    public void saveUser(String key,String value){
         ContentValues contentValues=new ContentValues();
-        contentValues.put("uid",uid);
-        contentValues.put("name",name);
-        contentValues.put("pwd",pwd);
-        contentValues.put("beat_token",beat_token);
+        contentValues.put(key,value);
         db.insert("user",null,contentValues);
     }
-    public void updateToken(String token){
+    public void saveUser(String key,Boolean value){
         ContentValues contentValues=new ContentValues();
-        contentValues.put("beat_token",token);
+        contentValues.put(key,value);
+        db.insert("user",null,contentValues);
+    }
+    public void saveUser(String key,int value){
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(key,value);
+        db.insert("user",null,contentValues);
+    }
+    public void updateUser(String key,String value){
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(key,value);
         db.update("user",contentValues,null,null);
     }
-    public String readToken(){
+    public void updateUser(String key,Boolean value){
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(key,value);
+        db.update("user",contentValues,null,null);
+    }
+    public void updateUser(String key,int value){
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(key,value);
+        db.update("user",contentValues,null,null);
+    }
+    public User readUser(){
+        User user=new User();
         Cursor cursor=db.query("user",null,null,null,null,null,null);
         if (cursor.moveToFirst()){
-            return cursor.getString(cursor.getColumnIndex("beat_token"));
-        }else {
-            return null;
+            do {
+                user.setUid(cursor.getInt(cursor.getColumnIndex("uid")));
+                user.setName(cursor.getString(cursor.getColumnIndex("name")));
+                user.setPwd(cursor.getString(cursor.getColumnIndex("pwd")));
+                user.setBeat_token(cursor.getString(cursor.getColumnIndex("beat_token")));
+            }while (cursor.moveToNext());
         }
-    }
-    public String readUserName(){
-        Cursor cursor=db.query("user",null,null,null,null,null,null);
-        if(cursor.moveToFirst()){
-            return cursor.getString(cursor.getColumnIndex("name"));
-        }else {
-            return null;
-        }
+        return user;
     }
 }

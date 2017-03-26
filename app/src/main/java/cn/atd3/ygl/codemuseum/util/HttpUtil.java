@@ -31,7 +31,7 @@ public class HttpUtil {
                     connection.setConnectTimeout(8000);
                     connection.setReadTimeout(8000);
                     // 设置User-Agent: Fiddler
-                    connection.setRequestProperty("User-Agent", "Fiddler");
+                    connection.setRequestProperty("Apis-Agent", "Fiddler");
                     // 设置contentType
                     connection.setRequestProperty("Content-Type", "application/json");
 
@@ -78,7 +78,7 @@ public class HttpUtil {
                     connection.setConnectTimeout(8000);
                     connection.setReadTimeout(8000);
                     // 设置User-Agent: Fiddler
-                    connection.setRequestProperty("User-Agent", "Fiddler");
+                    connection.setRequestProperty("Apis-Agent", "Fiddler");
                     // 设置contentType
                     connection.setRequestProperty("Content-Type", "application/json");
 
