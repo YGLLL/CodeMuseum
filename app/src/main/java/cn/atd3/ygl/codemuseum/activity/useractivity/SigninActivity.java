@@ -240,10 +240,7 @@ public class SigninActivity extends SuperActivity{
                 }
                 if((uid>-1)&&(!TextUtils.isEmpty(userName))){
                     CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(SigninActivity.this);
-                    codeMuseumDB.saveUser(CodeMuseumDB.UID,uid);
-                    codeMuseumDB.saveUser(CodeMuseumDB.NAME,userName);
-                    codeMuseumDB.saveUser(CodeMuseumDB.PWD,userPassword.getText().toString());
-                    codeMuseumDB.saveUser(CodeMuseumDB.BEAT_TOKEN,BEATTOKEN);
+                    codeMuseumDB.saveUser(uid,userName,userPassword.getText().toString(),BEATTOKEN);
 
                     Intent mainintent=new Intent(SigninActivity.this,MainActivity.class);
                     startActivity(mainintent);

@@ -69,19 +69,12 @@ public class CodeMuseumDB {
         return userMessageList;
     }
 
-    public void saveUser(String key,String value){
+    public void saveUser(int uid,String name,String pwd,String beat_token){
         ContentValues contentValues=new ContentValues();
-        contentValues.put(key,value);
-        db.insert("user",null,contentValues);
-    }
-    public void saveUser(String key,Boolean value){
-        ContentValues contentValues=new ContentValues();
-        contentValues.put(key,value);
-        db.insert("user",null,contentValues);
-    }
-    public void saveUser(String key,int value){
-        ContentValues contentValues=new ContentValues();
-        contentValues.put(key,value);
+        contentValues.put("uid",uid);
+        contentValues.put("name",name);
+        contentValues.put("pwd",pwd);
+        contentValues.put("beat_token",beat_token);
         db.insert("user",null,contentValues);
     }
     public void updateUser(String key,String value){

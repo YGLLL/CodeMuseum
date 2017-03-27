@@ -3,6 +3,8 @@ package cn.atd3.ygl.codemuseum.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.text.TextUtils;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,14 +49,14 @@ public class BeatService extends Service{
                     public void beatHeart(String returnString){
                         try{
                             JSONObject jsonObject=new JSONObject(returnString);
-                            if(jsonObject.has("return")){
-                                if (jsonObject.getBoolean("return")==false){
-                                    //token失效，重新登陆
+                            if(jsonObject.getString("error").equals("null")){
+                                jsonObject=jsonObject.getJSONObject("data");
+                                String nextToken=jsonObject.getString("token");
+                                BEATTOKEN=nextToken;
+                                codeMuseumDB.updateUser(CodeMuseumDB.BEAT_TOKEN,nextToken);
+                            }else {
+                                if(jsonObject.getString("error").equals("refreshTokenError")){
                                     signin();
-                                }else {
-                                    String nextToken=jsonObject.getJSONObject("return").getString("token");
-                                    BEATTOKEN=nextToken;
-                                    codeMuseumDB.updateUser(CodeMuseumDB.BEAT_TOKEN,nextToken);
                                 }
                             }
                         }catch (JSONException e){e.printStackTrace();}
