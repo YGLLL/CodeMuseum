@@ -3,6 +3,7 @@ package cn.atd3.ygl.codemuseum.activity.useractivity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -49,6 +50,9 @@ public class SignUpActivity extends SuperActivity{
     protected void onCreate(Bundle sls){
         super.onCreate(sls);
         setContentView(cn.atd3.ygl.codemuseum.R.layout.signupactivity_layout);
+
+        ActionBar actionBar= getSupportActionBar();
+        actionBar.setTitle("注册");
 
         signup_userid=(EditText)findViewById(cn.atd3.ygl.codemuseum.R.id.signup_userid);
         signup_userpassword1=(EditText)findViewById(cn.atd3.ygl.codemuseum.R.id.signup_userpassword1);

@@ -12,21 +12,21 @@
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name="cn.atd3.support.Application"
+        android:name="cn.atd3.ygl.codemuseum.util.MyApplication"
         android:theme="@style/AppTheme">
         <meta-data
             android:value="1:c7b04d1534f1ed7bb9241cf5fe6ea11e"
             android:name="cn.atd3.support.api.v1.ClientToken"
             />
-    <activity
-        android:name=".activity.MainActivity"
-        android:theme="@style/AppTheme.NoActionBar"
-        android:launchMode="singleTask">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
+        <activity
+            android:name=".activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activity.useractivity.SigninActivity" />
         <activity android:name=".activity.useractivity.SignUpActivity" />
         <activity android:name=".activity.useractivity.SettingActivity" />

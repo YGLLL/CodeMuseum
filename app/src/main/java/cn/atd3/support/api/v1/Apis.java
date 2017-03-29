@@ -1,11 +1,19 @@
 package cn.atd3.support.api.v1;
 
+import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import cn.atd3.support.api.ServerException;
+import cn.atd3.support.api.v1.model.Head;
+import cn.atd3.ygl.codemuseum.activity.useractivity.SigninActivity;
+import cn.atd3.ygl.codemuseum.util.MyApplication;
 
 import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
 
@@ -15,6 +23,8 @@ import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
  * 用户API接口
  */
 public class Apis {
+    private final static String TAG="Apis";
+
     /**
      * 检测注册是否需要验证码
      */
@@ -23,15 +33,18 @@ public class Apis {
             @Override
             public void run() {
                 try{
-                    String get=ApiManager.action("user/signupcode");
-                    JSONObject object=new JSONObject(get);
-                    if (object.has("return")){
-                        apiActions.checkSignUpNeedCode(object.getBoolean("return"));
+                    String get=ApiManager.action("user/signupCodeIfy");
+                    Log.i(TAG,"checkSignUpNeedCode:"+get+"end");
+                    Gson gson=new Gson();
+                    Head head=gson.fromJson(get, Head.class);
+                    if(TextUtils.isEmpty(head.error)){
+                        //apiActions.checkSignUpNeedCode();
+                        Log.i(TAG,"new"+head.data);
+                    }else {
+                        Log.e(TAG,"error:"+head.error+",message:"+head.message);
                     }
                 }catch (ServerException e){
                     apiActions.serverException(e);
-                }catch (JSONException e){
-                    apiActions.serverException(new ServerException("server response format exception", e));
                 }
             }
         }).start();
@@ -334,4 +347,6 @@ public class Apis {
             }
         }).start();
     }
+
+
 }

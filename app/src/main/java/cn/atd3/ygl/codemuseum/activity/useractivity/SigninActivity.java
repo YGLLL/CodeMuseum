@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -52,6 +53,9 @@ public class SigninActivity extends SuperActivity{
     protected void onCreate(Bundle sls){
         super.onCreate(sls);
         setContentView(R.layout.signinactivity_layout);
+
+        ActionBar actionBar= getSupportActionBar();
+        actionBar.setTitle("登陆");
 
         userId=(EditText)findViewById(R.id.userid);
         userPassword=(EditText)findViewById(R.id.userpassword);

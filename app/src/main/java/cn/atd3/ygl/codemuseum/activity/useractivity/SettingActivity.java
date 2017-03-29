@@ -1,6 +1,7 @@
 package cn.atd3.ygl.codemuseum.activity.useractivity;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,6 +30,9 @@ public class SettingActivity extends SuperActivity{
     protected void onCreate(Bundle sls){
         super.onCreate(sls);
         setContentView(R.layout.settingactivity_layout);
+
+        ActionBar actionBar= getSupportActionBar();
+        actionBar.setTitle("设置");
 
         list=new ArrayList<String>();
         test();

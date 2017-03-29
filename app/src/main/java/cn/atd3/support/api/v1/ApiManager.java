@@ -32,11 +32,10 @@ import cn.atd3.support.api.ClientNoFoundException;
 public class ApiManager {
     private static int CLIENT_ID;
     private static String CLIENT_TOKEN;
-    private static String TAG="ApiClient";
-    private static String API_HOST="http://api.i.atd3.cn";
-    private static String API_VERSION="v1.0";
+    private static String API_HOST="http://dev.atd3.cn/api";
     private static int timeOut=5000;
     private static String META_NAME="cn.atd3.support.api.v1.ClientToken";
+    private static final String TAG="ApiManager";
 
     private static ApiManager instance=new ApiManager();
 
@@ -126,7 +125,7 @@ public class ApiManager {
      * @throws ServerException
      */
     public static  String action(String action,String data,String type) throws ServerException {
-        String address=API_HOST+'/'+API_VERSION+'/'+action;
+        String address=API_HOST+'/'+action;
         String response="";
         try {
             Log.e("Connect","prepare connect");
@@ -158,7 +157,8 @@ public class ApiManager {
                 outputStream.flush();
                 outputStream.close();
             }
-            Log.e("Connect","connected");
+            String cookie=httpUrlConnection.getHeaderField("Set-Cookie");
+            Log.i(TAG,"cookie:"+cookie+"end");
             InputStream inputStream = httpUrlConnection.getInputStream();
             BufferedReader r=new BufferedReader(new InputStreamReader(inputStream));
             String l,out="";
@@ -175,7 +175,7 @@ public class ApiManager {
     }
 
     public static Bitmap getHttpPicture(String action)throws ServerException {
-        String address=API_HOST+'/'+API_VERSION+'/'+action;
+        String address=API_HOST+'/'+action;
         Bitmap bitmap=null;
         try {
             // 创建连接

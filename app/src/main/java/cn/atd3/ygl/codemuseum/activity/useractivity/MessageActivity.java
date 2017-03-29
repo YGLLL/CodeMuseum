@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -41,6 +42,9 @@ public class MessageActivity extends SuperActivity{
 
         super.onCreate(sls);
         setContentView(R.layout.messageactivity_layout);
+
+        ActionBar actionBar= getSupportActionBar();
+        actionBar.setTitle("消息");
 
         message=(Button)findViewById(R.id.message);
         privateMessage=(Button)findViewById(R.id.privatemessage);

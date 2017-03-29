@@ -105,4 +105,7 @@ public class CodeMuseumDB {
         }
         return user;
     }
+    public void deleteUser(){
+        db.delete("user",null,null);
+    }
 }
