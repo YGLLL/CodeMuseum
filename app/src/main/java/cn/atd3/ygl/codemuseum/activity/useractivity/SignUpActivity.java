@@ -47,8 +47,8 @@ public class SignUpActivity extends SuperActivity{
 
     private ProgressDialog progressDialog;
     @Override
-    protected void onCreate(Bundle sls){
-        super.onCreate(sls);
+    protected void onCreate(Bundle save){
+        super.onCreate(save);
         setContentView(cn.atd3.ygl.codemuseum.R.layout.signupactivity_layout);
 
         ActionBar actionBar= getSupportActionBar();

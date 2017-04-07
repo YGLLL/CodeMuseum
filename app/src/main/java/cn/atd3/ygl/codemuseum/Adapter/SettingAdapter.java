@@ -59,7 +59,7 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.ViewHold
                     case 0:
                         Log.i(TAG,"验证邮箱");
                         break;
-                    case 1:
+                    case 3:
                         Intent intent=new Intent(mcontext, BeatService.class);
                         mcontext.stopService(intent);
                         CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(mcontext);

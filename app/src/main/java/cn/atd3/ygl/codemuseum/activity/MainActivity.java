@@ -2,11 +2,15 @@ package cn.atd3.ygl.codemuseum.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,11 +18,16 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.atd3.ygl.codemuseum.Adapter.ArticlesAdapter;
 import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.activity.useractivity.MessageActivity;
 import cn.atd3.ygl.codemuseum.activity.useractivity.SettingActivity;
 import cn.atd3.ygl.codemuseum.activity.useractivity.SigninActivity;
 import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
+import cn.atd3.ygl.codemuseum.model.Articles;
 import cn.atd3.ygl.codemuseum.model.User;
 import cn.atd3.ygl.codemuseum.service.BeatService;
 import cn.atd3.ygl.codemuseum.util.Utility;
@@ -34,6 +43,11 @@ public class MainActivity extends AppCompatActivity
     private TextView username;
     private Toolbar toolbar;
     private DrawerLayout drawer;
+    private RecyclerView articlesRecyclerView;
+    private ArticlesAdapter articlesAdapter;
+    private List<Articles> articlesList;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private FloatingActionButton floatingActionButton;
     @Override
     protected void onCreate(Bundle sls){
         super.onCreate(sls);
@@ -66,6 +80,64 @@ public class MainActivity extends AppCompatActivity
         });
 
         IfSignedIn();
+
+        swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+
+        articlesRecyclerView=(RecyclerView)findViewById(R.id.recycler_view);
+        GridLayoutManager layoutManager=new GridLayoutManager(MainActivity.this,1);
+        articlesRecyclerView.setLayoutManager(layoutManager);
+        articlesList =new ArrayList<Articles>();
+        test();
+        articlesAdapter=new ArticlesAdapter(articlesList);
+        articlesRecyclerView.setAdapter(articlesAdapter);
+
+        floatingActionButton=(FloatingActionButton)findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this,ReleaseArticleActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void refresh(){
+        //下拉刷新操作
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(500);
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void test(){
+        String broing="";
+        for(int i=0;i<15;i++){
+            Articles articles=new Articles();
+            articles.setTitle("testTitle"+i);
+            broing=broing+"testContent";
+            articles.setContent(broing);
+            articles.setPraise("testPraise"+i);
+            articlesList.add(articles);
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

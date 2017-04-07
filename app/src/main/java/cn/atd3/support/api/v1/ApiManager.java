@@ -32,6 +32,7 @@ import cn.atd3.support.api.ClientNoFoundException;
 public class ApiManager {
     private static int CLIENT_ID;
     private static String CLIENT_TOKEN;
+    private static String APIS_AGENT="ApiClient";
     private static String API_HOST="http://dev.atd3.cn/api";
     private static int timeOut=5000;
     private static String META_NAME="cn.atd3.support.api.v1.ClientToken";
@@ -139,9 +140,11 @@ public class ApiManager {
             httpUrlConnection.setReadTimeout(timeOut);
 
             // 压入客户端验证信息
-            httpUrlConnection.setRequestProperty("API-Client",""+CLIENT_ID);
+            httpUrlConnection.setRequestProperty("API-Client",String.valueOf(CLIENT_ID));
+            Log.i(TAG,"CLIENT_ID"+CLIENT_ID+"end");
             httpUrlConnection.setRequestProperty("API-Token",CLIENT_TOKEN);
-            httpUrlConnection.setRequestProperty("Apis-Agent",TAG);
+            Log.i(TAG,"CLIENT_TOKEN"+CLIENT_TOKEN+"end");
+            httpUrlConnection.setRequestProperty("Apis-Agent",APIS_AGENT);
 
             // 连接服务器
             if (data==null){
@@ -188,10 +191,9 @@ public class ApiManager {
             httpUrlConnection.setReadTimeout(timeOut);
 
             // 压入客户端验证信息
-            httpUrlConnection.setRequestProperty("API-Client",""+CLIENT_ID);
+            httpUrlConnection.setRequestProperty("API-Client",String.valueOf(CLIENT_ID));
             httpUrlConnection.setRequestProperty("API-Token",CLIENT_TOKEN);
-            httpUrlConnection.setRequestProperty("Apis-Agent",TAG);
-
+            httpUrlConnection.setRequestProperty("Apis-Agent",APIS_AGENT);
             // 连接服务器
             httpUrlConnection.setRequestMethod("GET");
             httpUrlConnection.connect();

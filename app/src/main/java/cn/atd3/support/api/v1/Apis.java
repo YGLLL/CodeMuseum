@@ -1,9 +1,7 @@
 package cn.atd3.support.api.v1;
 
-import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -12,8 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import cn.atd3.support.api.ServerException;
 import cn.atd3.support.api.v1.model.Head;
-import cn.atd3.ygl.codemuseum.activity.useractivity.SigninActivity;
-import cn.atd3.ygl.codemuseum.util.MyApplication;
 
 import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
 
@@ -38,8 +34,12 @@ public class Apis {
                     Gson gson=new Gson();
                     Head head=gson.fromJson(get, Head.class);
                     if(TextUtils.isEmpty(head.error)){
-                        //apiActions.checkSignUpNeedCode();
-                        Log.i(TAG,"new"+head.data);
+                        Log.i(TAG,"checkSignUpNeedCodehead.data"+head.data);
+                        if(head.data.equals("true")){
+                            apiActions.checkSignUpNeedCode(true);
+                        }else {
+                            apiActions.checkSignUpNeedCode(false);
+                        }
                     }else {
                         Log.e(TAG,"error:"+head.error+",message:"+head.message);
                     }
@@ -58,15 +58,21 @@ public class Apis {
             @Override
             public void run() {
                 try{
-                    String get=ApiManager.action("user/signincode");
-                    JSONObject object=new JSONObject(get);
-                    if (object.has("return")){
-                        apiActions.checkSignInNeedCode(object.getBoolean("return"));
+                    String get=ApiManager.action("user/signinCodeIfy");
+                    Gson gson=new Gson();
+                    Head head=gson.fromJson(get, Head.class);
+                    if(TextUtils.isEmpty(head.error)){
+                        Log.i(TAG,"checkSignInNeedCodehead.data"+head.data);
+                        if(head.data.equals("true")){
+                            apiActions.checkSignUpNeedCode(true);
+                        }else {
+                            apiActions.checkSignUpNeedCode(false);
+                        }
+                    }else {
+                        Log.e(TAG,"error:"+head.error+",message:"+head.message);
                     }
                 }catch (ServerException e){
                     apiActions.serverException(e);
-                }catch (JSONException e){
-                    apiActions.serverException(new ServerException("server response format exception", e));
                 }
             }
         }).start();
@@ -98,10 +104,17 @@ public class Apis {
                 try {
                     JSONObject jsonvalue=new JSONObject();
                     jsonvalue.put("name",value);
-                    String get=ApiManager.action("user/checkname",jsonvalue);
-                    JSONObject jsonObject=new JSONObject(get);
-                    if (jsonObject.has("return")){
-                        apiActions.checkUserId(jsonObject.getBoolean("return"));
+                    String get=ApiManager.action("user/checkNameExist",jsonvalue);
+                    Gson gson=new Gson();
+                    Head head=gson.fromJson(get,Head.class);
+                    if(TextUtils.isEmpty(head.error)){
+                        if(head.data.equals("true")){
+                            apiActions.checkUserId(true);
+                        }else {
+                            apiActions.checkUserId(false);
+                        }
+                    }else {
+                        Log.e(TAG,"error:"+head.error+",message:"+head.message);
                     }
                 }catch (ServerException e){
                     apiActions.serverException(e);
@@ -122,10 +135,17 @@ public class Apis {
                 try {
                     JSONObject jsonvalue=new JSONObject();
                     jsonvalue.put("email",value);
-                    String get=ApiManager.action("user/checkemail",jsonvalue);
-                    JSONObject jsonObject=new JSONObject(get);
-                    if (jsonObject.has("return")){
-                        apiActions.checkUserEmail(jsonObject.getBoolean("return"));
+                    String get=ApiManager.action("user/checkEmailExist",jsonvalue);
+                    Gson gson =new Gson();
+                    Head head=gson.fromJson(get,Head.class);
+                    if(TextUtils.isEmpty(head.error)){
+                        if(head.data.equals("true")){
+                            apiActions.checkUserEmail(true);
+                        }else {
+                            apiActions.checkUserEmail(false);
+                        }
+                    }else {
+                        Log.e(TAG,"error:"+head.error+",message:"+head.message);
                     }
                 }catch (ServerException e){
                     apiActions.serverException(e);
