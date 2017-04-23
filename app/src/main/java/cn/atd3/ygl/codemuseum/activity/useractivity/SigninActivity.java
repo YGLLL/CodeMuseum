@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,8 +16,7 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Iterator;
+import org.litepal.crud.DataSupport;
 
 import cn.atd3.support.api.ServerException;
 import cn.atd3.support.api.v1.ApiActions;
@@ -28,7 +28,6 @@ import cn.atd3.ygl.codemuseum.model.User;
 
 import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
 import static cn.atd3.ygl.codemuseum.util.SQLUtil.MYCOOKIE;
-import static cn.atd3.ygl.codemuseum.util.Utility.MYCOOKIE;
 
 /**
  * Created by YGL on 2017/2/20.
@@ -36,6 +35,7 @@ import static cn.atd3.ygl.codemuseum.util.Utility.MYCOOKIE;
 
 public class SigninActivity extends SuperActivity{
 
+    private static final String TAG = "SigninActivity";
     private EditText userId;
     private EditText userPassword;
     private EditText checkcode;
@@ -206,10 +206,6 @@ public class SigninActivity extends SuperActivity{
                 closeProgressDialog();//关闭等待动画
                 if(success){
                     SaveUserDataToSQL(message);
-                    Intent intent=new Intent(SigninActivity.this,MainActivity.class);
-                    startActivity(intent);
-                    toastPrintf("登陆成功");
-                    finish();
                 }else {
                     getcheckcode();//刷新验证码
                     toastPrintf(message);
@@ -224,11 +220,12 @@ public class SigninActivity extends SuperActivity{
 
     //保存用户数据到SQL
     private void SaveUserDataToSQL(final String cookie){
-        MYCOOKIE=cookie;
         Apis.getUserInformation(cookie,new ApiActions() {
             @Override
             public void getUserInformation(String id,String name,String email){
-                if((TextUtils.isEmpty(id))&&(TextUtils.isEmpty(name))){
+                if((!TextUtils.isEmpty(id))&&(!TextUtils.isEmpty(name))){
+                    MYCOOKIE=cookie;
+                    Log.i(TAG,"well! we have Userinfo Data");
                     User user=new User();
                     user.setUid(id);
                     user.setName(name);
@@ -236,6 +233,10 @@ public class SigninActivity extends SuperActivity{
                     user.setEmail(email);
                     user.setCookie(cookie);
                     user.coverSave();
+
+                    Intent intent=new Intent(SigninActivity.this,MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
             @Override

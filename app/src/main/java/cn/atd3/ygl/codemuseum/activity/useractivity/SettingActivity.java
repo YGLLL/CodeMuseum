@@ -63,7 +63,6 @@ public class SettingActivity extends SuperActivity{
     }
 
     private void test(){
-        list.add("验证邮箱");
         list.add("关于CodeMuseum");
         list.add("退出登录");
     }

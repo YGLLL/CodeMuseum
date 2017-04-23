@@ -174,13 +174,14 @@ public class Apis {
             @Override
             public void run() {
                 try {
-                    String get=ApiManager.action("user/signin",value);
+                    StringBuffer sb=new StringBuffer();
+                    String get=ApiManager.action("user/signin",value,sb);
                     Gson gson=new Gson();
                     Head head=gson.fromJson(get,Head.class);
                     if(TextUtils.isEmpty(head.error)){
                         BooleanModel booleanModel=gson.fromJson(get,BooleanModel.class);
                         if (booleanModel.data){
-                            apiActions.userSignIn(true,null);
+                            apiActions.userSignIn(true,sb.toString());
                         }
                     }else {
                         Log.e(TAG,"userSignInerror:"+ head.error+",message:"+ head.message);

@@ -159,6 +159,7 @@ public class ApiManager {
             Log.e("Connect","connected exception",e);
             throw new ServerException("read response failed",e);
         }
+        //下一步，拦截所有错误
         return response;
     }
 

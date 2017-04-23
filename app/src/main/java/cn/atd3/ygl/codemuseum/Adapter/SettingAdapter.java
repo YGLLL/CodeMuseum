@@ -59,13 +59,8 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.ViewHold
             public void onClick(View v) {
                 switch(position){
                     case 0:
-                        Log.i(TAG,"验证邮箱");
                         break;
-                    case 3:
-                        Intent intent=new Intent(mcontext, BeatService.class);
-                        mcontext.stopService(intent);
-                        //CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(mcontext);
-                        //codeMuseumDB.deleteUser();
+                    case 1:
                         DataSupport.deleteAll(User.class);
                         Intent mainintent=new Intent(mcontext, MainActivity.class);
                         mcontext.startActivity(mainintent);

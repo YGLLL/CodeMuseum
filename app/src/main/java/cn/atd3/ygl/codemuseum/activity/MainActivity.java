@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -81,8 +82,6 @@ public class MainActivity extends AppCompatActivity
                 drawer.closeDrawers();
             }
         });
-
-        IfSignedIn();
 
         swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
@@ -177,15 +176,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart(){
         super.onStart();
-        IfSignedIn();
+        IfHaveUser();
     }
 
-    private void IfSignedIn(){
-        if(SQLUtil.IsHaveUser()){
+    private void IfHaveUser(){
+        User user=DataSupport.findFirst(User.class);
+        if(user!=null){
             noLoginNavLayout.setVisibility(View.INVISIBLE);
             loginedNavLayout.setVisibility(View.VISIBLE);
-            User user=DataSupport.findFirst(User.class);
             username.setText(user.getName());
+        }else {
+            noLoginNavLayout.setVisibility(View.VISIBLE);
+            loginedNavLayout.setVisibility(View.INVISIBLE);
         }
     }
 }

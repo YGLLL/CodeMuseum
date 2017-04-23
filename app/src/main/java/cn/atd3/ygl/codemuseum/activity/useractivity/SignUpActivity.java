@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.regex.Pattern;
 
 import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
-import static cn.atd3.ygl.codemuseum.util.Utility.MYCOOKIE;
+import static cn.atd3.ygl.codemuseum.util.SQLUtil.MYCOOKIE;
 
 /**
  * Created by YGL on 2017/2/20.
@@ -192,10 +192,6 @@ public class SignUpActivity extends SuperActivity{
                 if(success){
                     //注册成功
                     SaveUserDataToSQL(message);
-                    Intent intent=new Intent(SignUpActivity.this,MainActivity.class);
-                    startActivity(intent);
-                    toastPrintf("注册成功");
-                    finish();
                 }else {
                     getcheckcode();//刷新验证码
                     toastPrintf(message);
@@ -210,17 +206,22 @@ public class SignUpActivity extends SuperActivity{
 
     //保存用户数据到SQL
     private void SaveUserDataToSQL(final String cookie){
-        MYCOOKIE=cookie;
         Apis.getUserInformation(cookie,new ApiActions() {
             @Override
             public void getUserInformation(String id,String name,String email){
-                if((TextUtils.isEmpty(id))&&(TextUtils.isEmpty(name))){
+                if((!TextUtils.isEmpty(id))&&(!TextUtils.isEmpty(name))){
+                    MYCOOKIE=cookie;
                     User user=new User();
                     user.setUid(id);
                     user.setName(name);
                     user.setEmail(email);
                     user.setCookie(cookie);
                     user.coverSave();
+
+                    toastPrintf("注册成功");
+                    Intent intent=new Intent(SignUpActivity.this,MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
             @Override

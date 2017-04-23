@@ -11,7 +11,7 @@ import org.litepal.tablemanager.Connector;
 import cn.atd3.support.api.v1.ApiManager;
 import cn.atd3.ygl.codemuseum.model.User;
 
-import static cn.atd3.ygl.codemuseum.util.Utility.MYCOOKIE;
+import static cn.atd3.ygl.codemuseum.util.SQLUtil.MYCOOKIE;
 
 /**
  * Created by DXkite on 2017/2/14 0014.
