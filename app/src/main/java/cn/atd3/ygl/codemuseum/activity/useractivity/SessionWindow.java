@@ -2,7 +2,6 @@ package cn.atd3.ygl.codemuseum.activity.useractivity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -10,7 +9,7 @@ import android.widget.EditText;
 
 import cn.atd3.support.api.ServerException;
 import cn.atd3.support.api.v1.ApiActions;
-import cn.atd3.support.api.v1.User;
+import cn.atd3.support.api.v1.Apis;
 import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.activity.SuperActivity;
 
@@ -41,7 +40,7 @@ public class SessionWindow extends SuperActivity {
     }
 
     private void text(){
-        User.sendMessage(sendmessage.getText().toString(),getIntent().getIntExtra("Uid",-1), new ApiActions() {
+        Apis.sendMessage(sendmessage.getText().toString(),getIntent().getIntExtra("Uid",-1), new ApiActions() {
             @Override
             public void sendMessage(String string){
                 Log.i("xxx",string);
@@ -51,7 +50,7 @@ public class SessionWindow extends SuperActivity {
                 e.printStackTrace();
             }
         });
-        User.inboxmessage(new ApiActions() {
+        Apis.inboxmessage(new ApiActions() {
             @Override
             public void inboxmessage(String message){
                 Log.i("xxx",message);

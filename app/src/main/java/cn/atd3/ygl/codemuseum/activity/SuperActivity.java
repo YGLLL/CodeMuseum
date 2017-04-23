@@ -5,7 +5,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import org.litepal.crud.DataSupport;
+
 import cn.atd3.ygl.codemuseum.R;
+import cn.atd3.ygl.codemuseum.model.User;
 
 /**
  * Created by YGL on 2017/3/25.

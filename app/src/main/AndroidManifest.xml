@@ -18,20 +18,22 @@
             android:value="1:c7b04d1534f1ed7bb9241cf5fe6ea11e"
             android:name="cn.atd3.support.api.v1.ClientToken"
             />
-    <activity
-        android:name=".activity.MainActivity"
-        android:theme="@style/AppTheme.NoActionBar"
-        android:launchMode="singleTask">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/NoBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activity.useractivity.SigninActivity" />
         <activity android:name=".activity.useractivity.SignUpActivity" />
         <activity android:name=".activity.useractivity.SettingActivity" />
         <activity android:name=".activity.useractivity.MessageActivity" />
         <service android:name=".service.BeatService"></service>
         <activity android:name=".activity.useractivity.SessionWindow"/>
+        <activity android:name=".activity.ArticleActivity"/>
+        <activity android:name=".activity.ReleaseArticleActivity"/>
     </application>
 </manifest>

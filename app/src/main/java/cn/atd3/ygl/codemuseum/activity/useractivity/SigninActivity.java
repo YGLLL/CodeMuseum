@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -17,23 +16,18 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.util.Date;
-import java.util.Iterator;
+import org.litepal.crud.DataSupport;
 
 import cn.atd3.support.api.ServerException;
 import cn.atd3.support.api.v1.ApiActions;
-import cn.atd3.support.api.v1.User;
+import cn.atd3.support.api.v1.Apis;
 import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.activity.MainActivity;
 import cn.atd3.ygl.codemuseum.activity.SuperActivity;
-import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
-import cn.atd3.ygl.codemuseum.service.BeatService;
-import cn.atd3.ygl.codemuseum.util.HttpCallbackListener;
-import cn.atd3.ygl.codemuseum.util.HttpPictureCallbackListener;
-import cn.atd3.ygl.codemuseum.util.HttpUtil;
-import cn.atd3.ygl.codemuseum.util.Utility;
+import cn.atd3.ygl.codemuseum.model.User;
 
 import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
+import static cn.atd3.ygl.codemuseum.util.SQLUtil.MYCOOKIE;
 
 /**
  * Created by YGL on 2017/2/20.
@@ -41,6 +35,7 @@ import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
 
 public class SigninActivity extends SuperActivity{
 
+    private static final String TAG = "SigninActivity";
     private EditText userId;
     private EditText userPassword;
     private EditText checkcode;
@@ -60,6 +55,9 @@ public class SigninActivity extends SuperActivity{
     protected void onCreate(Bundle sls){
         super.onCreate(sls);
         setContentView(R.layout.signinactivity_layout);
+
+        ActionBar actionBar= getSupportActionBar();
+        actionBar.setTitle("登陆");
 
         userId=(EditText)findViewById(R.id.userid);
         userPassword=(EditText)findViewById(R.id.userpassword);
@@ -103,7 +101,7 @@ public class SigninActivity extends SuperActivity{
 
     //查询是否需要验证码
     private void getcheckcode(){
-        User.checkSignInNeedCode(new ApiActions() {
+        Apis.checkSignInNeedCode(new ApiActions() {
             @Override
             public void checkSignInNeedCode(boolean need){
                 if(need){
@@ -127,7 +125,7 @@ public class SigninActivity extends SuperActivity{
 
     //获取验证码图片
     private void getcheckcodepicture(){
-        User.getCodePicture(new ApiActions() {
+        Apis.getCodePicture(new ApiActions() {
             @Override
             public void getCodePicture(final Bitmap bitmap){
                 runOnUiThread(new Runnable() {
@@ -152,7 +150,7 @@ public class SigninActivity extends SuperActivity{
             toastPrintf("请输入用户名");
             return;
         }
-        User.checkUserId(value, new ApiActions() {
+        Apis.checkUserId(value, new ApiActions() {
             @Override
             public void checkUserId(boolean have){
                 if(have){
@@ -202,21 +200,15 @@ public class SigninActivity extends SuperActivity{
         }catch (JSONException e){
             e.printStackTrace();
         }
-        User.userSignIn(jsonString, new ApiActions() {
+        Apis.userSignIn(jsonString, new ApiActions() {
             @Override
             public void userSignIn(boolean success,String message){
                 closeProgressDialog();//关闭等待动画
                 if(success){
-                    BEATTOKEN=message;
-                    getInfo();//查询用户信息
+                    SaveUserDataToSQL(message);
                 }else {
-                    if(message.equals("codeerror")){
-                        getcheckcode();//刷新验证码
-                        toastPrintf("验证码错误");
-                    }else {
-                        getcheckcode();//刷新验证码
-                        toastPrintf("密码错误");
-                    }
+                    getcheckcode();//刷新验证码
+                    toastPrintf(message);
                 }
             }
             @Override
@@ -226,33 +218,24 @@ public class SigninActivity extends SuperActivity{
         });
     }
 
-    //查询用户信息
-    private void getInfo(){
-        User.getUserInformation(BEATTOKEN, new ApiActions() {
+    //保存用户数据到SQL
+    private void SaveUserDataToSQL(final String cookie){
+        Apis.getUserInformation(cookie,new ApiActions() {
             @Override
-            public void getUserInformation(String information){
-                int uid=-1;
-                String userName="";
-                try{
-                    JSONObject jsonObject=new JSONObject(information);
-                    jsonObject=jsonObject.getJSONObject("return");
-                    Iterator iterator = jsonObject.keys();
-                    while (iterator.hasNext()){
-                        String key=(String) iterator.next();
-                        jsonObject=jsonObject.getJSONObject(key);
-                        uid=jsonObject.getInt("id");
-                        userName=jsonObject.getString("name");
-                    }
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
-                if((uid>-1)&&(!TextUtils.isEmpty(userName))){
-                    CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(SigninActivity.this);
-                    codeMuseumDB.saveUser(uid,userName,userPassword.getText().toString(),BEATTOKEN);
+            public void getUserInformation(String id,String name,String email){
+                if((!TextUtils.isEmpty(id))&&(!TextUtils.isEmpty(name))){
+                    MYCOOKIE=cookie;
+                    Log.i(TAG,"well! we have Userinfo Data");
+                    User user=new User();
+                    user.setUid(id);
+                    user.setName(name);
+                    user.setPwd(userPassword.getText().toString());
+                    user.setEmail(email);
+                    user.setCookie(cookie);
+                    user.coverSave();
 
-                    Intent mainintent=new Intent(SigninActivity.this,MainActivity.class);
-                    startActivity(mainintent);
-                    toastPrintf("登陆成功");
+                    Intent intent=new Intent(SigninActivity.this,MainActivity.class);
+                    startActivity(intent);
                     finish();
                 }
             }

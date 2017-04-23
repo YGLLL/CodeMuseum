@@ -34,34 +34,13 @@
         android:layout_marginRight="32dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/signup_userid"/>
-
-    <EditText
-        android:id="@+id/signup_userpassword1"
-        android:password="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:hint="密码"
-        android:layout_below="@id/signup_prompt_userid"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp" />
-    <EditText
-        android:id="@+id/signup_userpassword2"
-        android:password="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:hint="确认密码"
-        android:layout_below="@id/signup_userpassword1"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"/>
     <EditText
         android:id="@+id/signup_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:hint="你的邮箱"
-        android:layout_below="@id/signup_userpassword2"
+        android:layout_below="@id/signup_prompt_userid"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"/>
 
@@ -69,7 +48,7 @@
         android:id="@+id/signup_prompt_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="输入邮箱可以让我们为你提供优秀的服务"
+        android:text="注册成功后，密码将发送至你的邮箱"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="32dp"
         android:layout_centerHorizontal="true"

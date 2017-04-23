@@ -16,25 +16,31 @@ public class PrivateSession {
     public Bitmap getUserLogo() {
         return userLogo;
     }
-    public String getUserName() {
-        return userName;
-    }
-    public String getMessageQuantity() {
-        return messageQuantity;
-    }
-    public int getUid() {
-        return uid;
-    }
 
     public void setUserLogo(Bitmap userLogo) {
         this.userLogo = userLogo;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+    public String getMessageQuantity() {
+        return messageQuantity;
+    }
+
     public void setMessageQuantity(String messageQuantity) {
         this.messageQuantity = messageQuantity;
     }
+
+    public int getUid() {
+        return uid;
+    }
+
     public void setUid(int uid) {
         this.uid = uid;
     }

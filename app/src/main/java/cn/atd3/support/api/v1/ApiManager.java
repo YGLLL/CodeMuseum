@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -32,11 +33,11 @@ import cn.atd3.support.api.ClientNoFoundException;
 public class ApiManager {
     private static int CLIENT_ID;
     private static String CLIENT_TOKEN;
-    private static String TAG="ApiClient";
-    private static String API_HOST="http://api.i.atd3.cn";
-    private static String API_VERSION="v1.0";
+    private static String APIS_AGENT="ApiClient";
+    private static String API_HOST="http://dev.atd3.cn/api";
     private static int timeOut=5000;
     private static String META_NAME="cn.atd3.support.api.v1.ClientToken";
+    private static final String TAG="ApiManager";
 
     private static ApiManager instance=new ApiManager();
 
@@ -85,48 +86,24 @@ public class ApiManager {
         return instance;
     }
 
-    /**
-     * 发送请求到服务器 [GET]
-     * @param action 请求数据的接口
-     * @return 服务器返回的内容
-     * @throws ServerException
-     */
-    public static  String action(String action)throws ServerException {
+    public static  String action(String action)throws ServerException{
         return action(action,null,null);
     }
-
-    /**
-     * 发送JSON文本到服务器
-     * @param action 请求数据的接口
-     * @param data 发送到服务器的文本数据
-     * @return 服务器返回的内容
-     * @throws ServerException
-     */
-    public static  String action(String action,String data)throws ServerException {
-        return action(action,data,"application/json");
+    public static  String action(String action,String data)throws ServerException{
+        return action(action,data,null);
     }
-
-    /**
-     * 发送JSON数据到服务器
-     * @param action 请求数据的接口
-     * @param data 发送到服务器的数据
-     * @return 服务器返回的内容
-     * @throws ServerException
-     */
-    public static  String action(String action,JSONObject data)throws ServerException {
-        return action(action,data.toString(),"application/json");
+    public static  String action(String action,StringBuffer myCookie)throws ServerException{
+        return action(action,null,myCookie);
     }
-
     /**
-     * 发送String数据到服务器，自动添加客户端授权信息
-     * @param action 请求数据的接口
-     * @param data 发送到服务器的数据
-     * @param type 数据的类型
-     * @return 服务器返回的内容
+     * @param action 地址
+     * @param data json数据
+     * @param myCookie cookie
+     * @return 返回json
      * @throws ServerException
      */
-    public static  String action(String action,String data,String type) throws ServerException {
-        String address=API_HOST+'/'+API_VERSION+'/'+action;
+    public static  String action(String action,String data,StringBuffer myCookie) throws ServerException {
+        String address=API_HOST+'/'+action;
         String response="";
         try {
             Log.e("Connect","prepare connect");
@@ -140,9 +117,17 @@ public class ApiManager {
             httpUrlConnection.setReadTimeout(timeOut);
 
             // 压入客户端验证信息
-            httpUrlConnection.setRequestProperty("API-Client",""+CLIENT_ID);
+            httpUrlConnection.setRequestProperty("API-Client",String.valueOf(CLIENT_ID));
+            Log.i(TAG,"CLIENT_ID"+CLIENT_ID+"end");
             httpUrlConnection.setRequestProperty("API-Token",CLIENT_TOKEN);
-            httpUrlConnection.setRequestProperty("User-Agent",TAG);
+            Log.i(TAG,"CLIENT_TOKEN"+CLIENT_TOKEN+"end");
+            httpUrlConnection.setRequestProperty("Apis-Agent",APIS_AGENT);
+            if(myCookie!=null){
+                if(!TextUtils.isEmpty(myCookie.toString())){
+                    Log.i(TAG,"set Cookie:"+myCookie.toString()+"end");
+                    httpUrlConnection.setRequestProperty("Cookie",myCookie.toString());
+                }
+            }
 
             // 连接服务器
             if (data==null){
@@ -150,7 +135,7 @@ public class ApiManager {
                 httpUrlConnection.connect();
             }else{
                 httpUrlConnection.setRequestMethod("POST");
-                httpUrlConnection.setRequestProperty("Content-Type", type);
+                httpUrlConnection.setRequestProperty("Content-Type","application/json");
                 httpUrlConnection.setRequestProperty("Content-Length", String.valueOf(data.getBytes().length));
                 httpUrlConnection.connect();
                 OutputStream outputStream = httpUrlConnection.getOutputStream();
@@ -158,7 +143,10 @@ public class ApiManager {
                 outputStream.flush();
                 outputStream.close();
             }
-            Log.e("Connect","connected");
+            if(myCookie!=null) {
+                myCookie.replace(0, myCookie.length(), httpUrlConnection.getHeaderField("Set-Cookie"));
+                Log.i(TAG, "get Cookie:" + myCookie.toString() + "end");
+            }
             InputStream inputStream = httpUrlConnection.getInputStream();
             BufferedReader r=new BufferedReader(new InputStreamReader(inputStream));
             String l,out="";
@@ -171,11 +159,12 @@ public class ApiManager {
             Log.e("Connect","connected exception",e);
             throw new ServerException("read response failed",e);
         }
+        //下一步，拦截所有错误
         return response;
     }
 
     public static Bitmap getHttpPicture(String action)throws ServerException {
-        String address=API_HOST+'/'+API_VERSION+'/'+action;
+        String address=API_HOST+'/'+action;
         Bitmap bitmap=null;
         try {
             // 创建连接
@@ -188,10 +177,9 @@ public class ApiManager {
             httpUrlConnection.setReadTimeout(timeOut);
 
             // 压入客户端验证信息
-            httpUrlConnection.setRequestProperty("API-Client",""+CLIENT_ID);
+            httpUrlConnection.setRequestProperty("API-Client",String.valueOf(CLIENT_ID));
             httpUrlConnection.setRequestProperty("API-Token",CLIENT_TOKEN);
-            httpUrlConnection.setRequestProperty("User-Agent",TAG);
-
+            httpUrlConnection.setRequestProperty("Apis-Agent",APIS_AGENT);
             // 连接服务器
             httpUrlConnection.setRequestMethod("GET");
             httpUrlConnection.connect();
