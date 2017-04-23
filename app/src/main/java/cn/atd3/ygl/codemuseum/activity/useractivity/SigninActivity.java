@@ -24,9 +24,11 @@ import cn.atd3.support.api.v1.Apis;
 import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.activity.MainActivity;
 import cn.atd3.ygl.codemuseum.activity.SuperActivity;
-import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
+import cn.atd3.ygl.codemuseum.model.User;
 
 import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
+import static cn.atd3.ygl.codemuseum.util.SQLUtil.MYCOOKIE;
+import static cn.atd3.ygl.codemuseum.util.Utility.MYCOOKIE;
 
 /**
  * Created by YGL on 2017/2/20.
@@ -203,16 +205,14 @@ public class SigninActivity extends SuperActivity{
             public void userSignIn(boolean success,String message){
                 closeProgressDialog();//关闭等待动画
                 if(success){
-                    BEATTOKEN=message;
-                    getInfo();//查询用户信息
+                    SaveUserDataToSQL(message);
+                    Intent intent=new Intent(SigninActivity.this,MainActivity.class);
+                    startActivity(intent);
+                    toastPrintf("登陆成功");
+                    finish();
                 }else {
-                    if(message.equals("codeerror")){
-                        getcheckcode();//刷新验证码
-                        toastPrintf("验证码错误");
-                    }else {
-                        getcheckcode();//刷新验证码
-                        toastPrintf("密码错误");
-                    }
+                    getcheckcode();//刷新验证码
+                    toastPrintf(message);
                 }
             }
             @Override
@@ -222,34 +222,20 @@ public class SigninActivity extends SuperActivity{
         });
     }
 
-    //查询用户信息
-    private void getInfo(){
-        Apis.getUserInformation(BEATTOKEN, new ApiActions() {
+    //保存用户数据到SQL
+    private void SaveUserDataToSQL(final String cookie){
+        MYCOOKIE=cookie;
+        Apis.getUserInformation(cookie,new ApiActions() {
             @Override
-            public void getUserInformation(String information){
-                int uid=-1;
-                String userName="";
-                try{
-                    JSONObject jsonObject=new JSONObject(information);
-                    jsonObject=jsonObject.getJSONObject("return");
-                    Iterator iterator = jsonObject.keys();
-                    while (iterator.hasNext()){
-                        String key=(String) iterator.next();
-                        jsonObject=jsonObject.getJSONObject(key);
-                        uid=jsonObject.getInt("id");
-                        userName=jsonObject.getString("name");
-                    }
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
-                if((uid>-1)&&(!TextUtils.isEmpty(userName))){
-                    CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(SigninActivity.this);
-                    codeMuseumDB.saveUser(uid,userName,userPassword.getText().toString(),BEATTOKEN);
-
-                    Intent mainintent=new Intent(SigninActivity.this,MainActivity.class);
-                    startActivity(mainintent);
-                    toastPrintf("登陆成功");
-                    finish();
+            public void getUserInformation(String id,String name,String email){
+                if((TextUtils.isEmpty(id))&&(TextUtils.isEmpty(name))){
+                    User user=new User();
+                    user.setUid(id);
+                    user.setName(name);
+                    user.setPwd(userPassword.getText().toString());
+                    user.setEmail(email);
+                    user.setCookie(cookie);
+                    user.coverSave();
                 }
             }
             @Override

@@ -13,20 +13,20 @@ public class Articles {
         return title;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public String getPraise() {
-        return praise;
-    }
-
     public void setTitle(String title) {
         this.title = title;
     }
 
+    public String getContent() {
+        return content;
+    }
+
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getPraise() {
+        return praise;
     }
 
     public void setPraise(String praise) {

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<litepal>
+        <dbname value="code_museum"></dbname>
+        <version value="3"></version>
+    <list>
+        <mapping class="cn.atd3.ygl.codemuseum.model.UserMessage"></mapping>
+        <mapping class="cn.atd3.ygl.codemuseum.model.User"></mapping>
+    </list>
+</litepal>

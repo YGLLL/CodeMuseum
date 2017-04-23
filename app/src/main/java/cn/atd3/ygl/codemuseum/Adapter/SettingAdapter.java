@@ -10,11 +10,13 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.List;
 
 import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.activity.MainActivity;
-import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
+import cn.atd3.ygl.codemuseum.model.User;
 import cn.atd3.ygl.codemuseum.service.BeatService;
 
 /**
@@ -62,8 +64,9 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.ViewHold
                     case 3:
                         Intent intent=new Intent(mcontext, BeatService.class);
                         mcontext.stopService(intent);
-                        CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(mcontext);
-                        codeMuseumDB.deleteUser();
+                        //CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(mcontext);
+                        //codeMuseumDB.deleteUser();
+                        DataSupport.deleteAll(User.class);
                         Intent mainintent=new Intent(mcontext, MainActivity.class);
                         mcontext.startActivity(mainintent);
                         Log.i(TAG,"退出登录");

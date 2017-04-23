@@ -19,7 +19,7 @@ public abstract class ApiActions {
     public void userSignUp(boolean success,String message){ Log.i(TAG,"userSignIn"); }
     public void userSignIn(boolean success,String message){ Log.i(TAG,"userSignIn"); }
     public void beatHeart(String returnString){Log.i(TAG,"beatHeart");}
-    public void getUserInformation(String information){Log.i(TAG,"getUserInformation");}
+    public void getUserInformation(String id,String name,String email){Log.i(TAG,"getUserInformation");}
     public void getUserPublicInformation(String informations){Log.i(TAG,"getUserPublicInformation");}
     public void sendMessage(String string){Log.i(TAG,"sendMessage");}
     public void inboxmessage(String message){Log.i(TAG,"inboxmessage");}

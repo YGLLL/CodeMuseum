@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -85,47 +86,23 @@ public class ApiManager {
         return instance;
     }
 
-    /**
-     * 发送请求到服务器 [GET]
-     * @param action 请求数据的接口
-     * @return 服务器返回的内容
-     * @throws ServerException
-     */
-    public static  String action(String action)throws ServerException {
+    public static  String action(String action)throws ServerException{
         return action(action,null,null);
     }
-
-    /**
-     * 发送JSON文本到服务器
-     * @param action 请求数据的接口
-     * @param data 发送到服务器的文本数据
-     * @return 服务器返回的内容
-     * @throws ServerException
-     */
-    public static  String action(String action,String data)throws ServerException {
-        return action(action,data,"application/json");
+    public static  String action(String action,String data)throws ServerException{
+        return action(action,data,null);
     }
-
-    /**
-     * 发送JSON数据到服务器
-     * @param action 请求数据的接口
-     * @param data 发送到服务器的数据
-     * @return 服务器返回的内容
-     * @throws ServerException
-     */
-    public static  String action(String action,JSONObject data)throws ServerException {
-        return action(action,data.toString(),"application/json");
+    public static  String action(String action,StringBuffer myCookie)throws ServerException{
+        return action(action,null,myCookie);
     }
-
     /**
-     * 发送String数据到服务器，自动添加客户端授权信息
-     * @param action 请求数据的接口
-     * @param data 发送到服务器的数据
-     * @param type 数据的类型
-     * @return 服务器返回的内容
+     * @param action 地址
+     * @param data json数据
+     * @param myCookie cookie
+     * @return 返回json
      * @throws ServerException
      */
-    public static  String action(String action,String data,String type) throws ServerException {
+    public static  String action(String action,String data,StringBuffer myCookie) throws ServerException {
         String address=API_HOST+'/'+action;
         String response="";
         try {
@@ -145,6 +122,12 @@ public class ApiManager {
             httpUrlConnection.setRequestProperty("API-Token",CLIENT_TOKEN);
             Log.i(TAG,"CLIENT_TOKEN"+CLIENT_TOKEN+"end");
             httpUrlConnection.setRequestProperty("Apis-Agent",APIS_AGENT);
+            if(myCookie!=null){
+                if(!TextUtils.isEmpty(myCookie.toString())){
+                    Log.i(TAG,"set Cookie:"+myCookie.toString()+"end");
+                    httpUrlConnection.setRequestProperty("Cookie",myCookie.toString());
+                }
+            }
 
             // 连接服务器
             if (data==null){
@@ -152,7 +135,7 @@ public class ApiManager {
                 httpUrlConnection.connect();
             }else{
                 httpUrlConnection.setRequestMethod("POST");
-                httpUrlConnection.setRequestProperty("Content-Type", type);
+                httpUrlConnection.setRequestProperty("Content-Type","application/json");
                 httpUrlConnection.setRequestProperty("Content-Length", String.valueOf(data.getBytes().length));
                 httpUrlConnection.connect();
                 OutputStream outputStream = httpUrlConnection.getOutputStream();
@@ -160,8 +143,10 @@ public class ApiManager {
                 outputStream.flush();
                 outputStream.close();
             }
-            String cookie=httpUrlConnection.getHeaderField("Set-Cookie");
-            Log.i(TAG,"cookie:"+cookie+"end");
+            if(myCookie!=null) {
+                myCookie.replace(0, myCookie.length(), httpUrlConnection.getHeaderField("Set-Cookie"));
+                Log.i(TAG, "get Cookie:" + myCookie.toString() + "end");
+            }
             InputStream inputStream = httpUrlConnection.getInputStream();
             BufferedReader r=new BufferedReader(new InputStreamReader(inputStream));
             String l,out="";

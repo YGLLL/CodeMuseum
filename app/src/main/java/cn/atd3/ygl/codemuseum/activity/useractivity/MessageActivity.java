@@ -6,19 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 
 import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.activity.SuperActivity;
-import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
-import cn.atd3.ygl.codemuseum.util.Utility;
-
-import static cn.atd3.ygl.codemuseum.service.BeatService.BEATTOKEN;
 
 /**
  * Created by YGL on 2017/2/20.
@@ -34,7 +27,7 @@ public class MessageActivity extends SuperActivity{
     private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle sls){
-        if(!Utility.IsSignedIn(MessageActivity.this)){
+        if(!Utility.IsHaveCookie()){
             Intent intent=new Intent(this,SigninActivity.class);
             startActivity(intent);
             finish();

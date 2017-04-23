@@ -18,6 +18,9 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.litepal.crud.DataSupport;
+import org.litepal.tablemanager.Connector;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,17 +29,16 @@ import cn.atd3.ygl.codemuseum.R;
 import cn.atd3.ygl.codemuseum.activity.useractivity.MessageActivity;
 import cn.atd3.ygl.codemuseum.activity.useractivity.SettingActivity;
 import cn.atd3.ygl.codemuseum.activity.useractivity.SigninActivity;
-import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
 import cn.atd3.ygl.codemuseum.model.Articles;
 import cn.atd3.ygl.codemuseum.model.User;
-import cn.atd3.ygl.codemuseum.service.BeatService;
-import cn.atd3.ygl.codemuseum.util.Utility;
+import cn.atd3.ygl.codemuseum.util.SQLUtil;
 
 /**
  * Created by YGL on 2017/2/22.
  */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "MainActivity";
     private RelativeLayout noLoginNavLayout;
     private RelativeLayout loginedNavLayout;
     private Button login_or_reg;
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle sls){
         super.onCreate(sls);
         setContentView(cn.atd3.ygl.codemuseum.R.layout.mainactivity_layout);
+        Connector.getDatabase();
 
         toolbar = (Toolbar) findViewById(cn.atd3.ygl.codemuseum.R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -178,14 +181,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void IfSignedIn(){
-        if(Utility.IsSignedIn(MainActivity.this)){
+        if(SQLUtil.IsHaveUser()){
             noLoginNavLayout.setVisibility(View.INVISIBLE);
             loginedNavLayout.setVisibility(View.VISIBLE);
-            CodeMuseumDB codeMuseumDB=CodeMuseumDB.getInstance(MainActivity.this);
-            User user=codeMuseumDB.readUser();
+            User user=DataSupport.findFirst(User.class);
             username.setText(user.getName());
-            Intent intent=new Intent(MainActivity.this, BeatService.class);
-            startService(intent);
         }
     }
 }

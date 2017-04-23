@@ -8,6 +8,7 @@ import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.litepal.crud.DataSupport;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -15,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 import cn.atd3.support.api.ServerException;
 import cn.atd3.support.api.v1.ApiActions;
 import cn.atd3.support.api.v1.Apis;
-import cn.atd3.ygl.codemuseum.db.CodeMuseumDB;
 import cn.atd3.ygl.codemuseum.model.User;
 
 /**
@@ -25,7 +25,6 @@ import cn.atd3.ygl.codemuseum.model.User;
  */
 public class BeatService extends Service{
     public static String BEATTOKEN="";
-    private CodeMuseumDB codeMuseumDB;
 
     @Override
     public IBinder onBind(Intent intent){
@@ -34,9 +33,10 @@ public class BeatService extends Service{
 
     @Override
     public void onCreate(){
-        codeMuseumDB=CodeMuseumDB.getInstance(BeatService.this);
-        User user=codeMuseumDB.readUser();
-        BEATTOKEN=user.getBeat_token();
+        //codeMuseumDB=CodeMuseumDB.getInstance(BeatService.this);
+        //User user=codeMuseumDB.readUser();
+        User user= DataSupport.findFirst(User.class);
+        BEATTOKEN=user.getCookie();
     }
 
     @Override
@@ -53,7 +53,10 @@ public class BeatService extends Service{
                                 jsonObject=jsonObject.getJSONObject("data");
                                 String nextToken=jsonObject.getString("token");
                                 BEATTOKEN=nextToken;
-                                codeMuseumDB.updateUser(CodeMuseumDB.BEAT_TOKEN,nextToken);
+                                //codeMuseumDB.updateUser(CodeMuseumDB.BEAT_TOKEN,nextToken);
+                                User user =new User();
+                                user.setCookie(nextToken);
+                                user.updateAll();
                             }else {
                                 if(jsonObject.getString("error").equals("refreshTokenError")){
                                     signin();
@@ -74,7 +77,7 @@ public class BeatService extends Service{
     }
 
     private void signin(){
-        User user=codeMuseumDB.readUser();
+        User user=DataSupport.findFirst(User.class);
         String jsonString="";
         try{
             JSONObject jsonObject=new JSONObject();
@@ -90,7 +93,9 @@ public class BeatService extends Service{
             public void userSignIn(boolean success,String message){
                 if(success){
                     BEATTOKEN=message;
-                    codeMuseumDB.updateUser(CodeMuseumDB.BEAT_TOKEN,message);
+                    User user=new User();
+                    user.setCookie(BEATTOKEN);
+                    user.updateAll();
                 }
             }
             @Override
